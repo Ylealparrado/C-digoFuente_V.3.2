@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+		<ui:param name="hideBreadCrumb" value="true" />
+		<ui:define name="content">
+		<h:form id="administracionForm">
+<!-- 		    <p:growl id="msgs" showDetail="true"/> -->
+			<div class="p-col-12 p-md-12 p-lg-7 p-xl-7">
+				<p:steps activeIndex="3" readonly="false">
+					<p:menuitem value="Inicio" partialSubmit="false" action="#{migaBean.abrirBienvenida}" title="Ir a inicio"/>
+						<p:menuitem value="Plan vial municipio: #{migaBean.municipioNombre}" action="#{migaBean.abrirListarViasPlanVial()}"/>
+						<p:menuitem value="Administrar veredas de #{migaBean.municipioNombre}" />
+				</p:steps>
+			</div>
+		 
+		    <p:dataTable 
+			    id="veredasTable" widgetVar="veredasTable" 
+			    var="vereda" value="#{administracionBean.veredasPorMunicipio}" 
+			    editable="true"
+  			    paginator="true" rows="6" paginatorPosition="bottom">
+		        <f:facet name="header">
+		            Administración veredas de #{migaBean.municipioNombre}
+		        </f:facet>
+		 
+		        <p:ajax event="rowEdit" listener="#{administracionBean.onRowEdit}" update="growl" />
+		        <p:ajax event="rowEditCancel" listener="#{administracionBean.onRowCancel}" update="growl" />
+		        
+		        <p:column headerText="Código">
+		            <p:cellEditor>
+		                <f:facet name="output"><h:outputText value="#{vereda.codVereda}" /></f:facet>
+		                <f:facet name="input"><p:inputText id="inCodVereda" value="#{vereda.codVereda}" style="width:100%"/></f:facet>
+		            </p:cellEditor>
+		        </p:column>
+		 
+		        <p:column headerText="Nombre">
+		            <p:cellEditor>
+		                <f:facet name="output"><h:outputText value="#{vereda.nombre}" /></f:facet>
+		                <f:facet name="input"><p:inputText id="inNombre" value="#{vereda.nombre}" style="width:100%"/></f:facet>
+		            </p:cellEditor>
+		        </p:column>
+		 
+		        <p:column headerText="Población">
+		            <p:cellEditor>
+		                <f:facet name="output"><h:outputText value="#{vereda.poblacion}" /></f:facet>
+		                <f:facet name="input"><p:inputText id="inPoblacion" value="#{vereda.poblacion}" style="width:100%"/></f:facet>
+		            </p:cellEditor>
+		        </p:column>
+		 
+		 
+		        <p:column style="width:32px">
+		            <p:rowEditor />
+		        </p:column>
+		    </p:dataTable>
+		 
+		     <div class="ui-g">
+		         <div class="ui-g-12">
+		             <p:commandButton value="Añadir vereda" styleClass="ui-priority-primary" process="@this" update="growl, veredasTable"
+		                              action="#{administracionBean.onAddNew()}" style="margin-bottom:20px" oncomplete="PF('veredasTable').paginator.setPage(PF('veredasTable').paginator.cfg.pageCount - 1);"
+		                              />
+		         </div>
+		     </div>
+		 
+		 </h:form>
+	</ui:define>
+	</ui:composition>
+</html>

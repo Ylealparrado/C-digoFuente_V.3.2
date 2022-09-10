@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="SessionFactory">
+<!--         <property name="hibernate.bytecode.use_reflection_optimizer">true</property> -->
+	    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>  
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property> 
+<!--         <property name="hibernate.search.autoregister_listeners">false</property> -->
+<!--         <property name="current_session_context_class">thread</property> -->
+        <property name="hibernate.show_sql">true</property> 
+        <property name="format_sql">${hibernate.show_sql}</property>
+        <property name="use_sql_comments">false</property>  
+        <property name="hibernate.transaction.flush_before_completion">true</property> 
+        <property name="hibernate.connection.release_mode">after_transaction</property>
+<!--         <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property> -->
+        <property name="hibernate.id.new_generator_mappings">false</property>
+        
+        <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        <property name="hibernate.c3p0.idle_test_period">100</property>
+		<property name="hibernate.c3p0.preferredTestQuery">select 1</property>
+        
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Departamento"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Municipio"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Vereda"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Via"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Categorizacion"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Categoria"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.Competencia"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.TecnicosPV"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.TecConectividadModalPNVIR"/>
+        <mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.TecConectividadRegionalPNVIR"/>        
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.PoblacionPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.SocPoblacionBeneficiadaPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.SocPoblacionDiferencialPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.SocSustitucionCultivosPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.SocIcvPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.CentroSocialPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.SocCentrosSocialesPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.AmbientalPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.EconomicoPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.EcoVolumenTraficoPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.EcoComercializacionPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.ProductividadPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.ProductoCuartiles"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.ProductoRendimiento"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.EcoRendimientoPNVIR"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.IntervencionPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.ModeloTeoricoPV"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.ActividadModeloTeorico"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.AnalisisPrecios"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.AnalisisEstimacion"/>
+		
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.GeoTramoVia"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.GeoSeccionTransversal"/>
+		
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.VSedeEducativaVereda"/>
+		<mapping class="es.everis.gvias.core.appbase.model.integration.dao.generado.VCentroSaludVereda"/>
+				
+<!-- 		<mapping resource="es/everis/gvias/core/appbase/model/integration/dao/generado/Via.hbm.xml" /> -->
+<!-- 		<mapping resource="es/everis/gvias/core/appbase/model/integration/dao/generado/Categorizacion.hbm.xml" /> -->
+	
+    </session-factory>
+</hibernate-configuration>

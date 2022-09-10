@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">  
+ 
+ <p:dialog  id="popupInformacionGeneral"
+			widgetVar="popupInformacionGeneral"
+            draggable="true" 
+		    modal="true"                
+		    autoCentre="true"
+		    closable="false"
+		    resizable="false"		    
+		    showEffect="slide"
+		    hideEffect="slide" 
+		    dynamic="true"
+            visible="#{popupInformacion.viewInformation}"             
+            style="max-width: 600px;"          
+            header="#{popupInformacion.titulo}">
+            
+	<h:form id="formPopupInformacion">    
+        <h:panelGrid styleClass="popupBody"> 			 	 		
+        			<br/>
+ 				<h:outputText value="#{popupInformacion.informacion}" escape="false" /> 
+ 				<br/>
+        		<h:outputText rendered="#{popupInformacion.informe and not popupInformacion.modoInforme}" value="#{popupInformacion.lineasInforme}" styleClass="seleccionablesSedes" />
+        		<p:inputTextarea readonly="true" rendered="#{popupInformacion.modoInforme}" cols="120" rows="20" value="#{popupInformacion.lineasInforme}" style="height: 60px;width:520px;overflow:auto;" styleClass="seleccionablesSedes"/>        		
+				<p:commandButton id="botonPopupAceptar" value=" Aceptar " action="#{popupInformacion.cerrar}" update="popupInformacionGeneral"/>
+      	</h:panelGrid>
+    </h:form>      	       
+</p:dialog>             
+
+</html>

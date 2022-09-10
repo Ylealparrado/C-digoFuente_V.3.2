@@ -1,0 +1,376 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+	<ui:define name="content">
+		<p:panel header="Gestión Viales GIS" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panelMapaCategorizacion">
+			<div style="width: 100%; height: 400px; position: relative;" id="map" />
+		</p:panel>
+	
+ 		<h:form id="categorizarViaForm">
+			<div class="p-col-12 p-md-12 p-lg-7 p-xl-7">
+				<p:steps activeIndex="2" readonly="false">
+					<p:menuitem value="Inicio" partialSubmit="false" action="#{migaBean.abrirBienvenida}" title="Ir a inicio"/>
+					<p:menuitem value="Vías del municipio: #{migaBean.municipioNombre}" action="#{migaBean.abrirListarViasCategorizacion()}"/>
+					<p:menuitem value="Categorizar vía: #{categorizarViaBean.via.codVia}" />
+				</p:steps>
+			</div>
+			
+			<p:tabView id="categorizacionTabView">
+				<p:tab title="Categorización" id="categorizacion">
+					<p:panel id="title" toggleable="true">
+					<f:facet name="header">
+					    <h:outputText value="PROCESO DE CATEGORIZACIÓN DE VÍA" style="font-weight: bold;"/>
+					    <i class="pi pi-info-circle" title="El primer paso para categorizar una vía,  es conocer muy bien cuál es la vía que se va a categorizar y verificar si la misma está o no incluida en la Red a cargo de la nación (Consultar la Resolución 339 del INVIAS año 1999  y Decreto 1735 del MT año 2001) lo cual permitirá determinar si forma parte de una troncal o transversal, igualmente se debe verificar si forma parte de la red del Plan Vial Regional de algún departamento. (Ver numeral 3 de la guía para realizar la Categorización de la Red Vial Nacional)"></i>
+					</f:facet>
+				        <div class="ui-g">
+						    <div class="ui-g-6">
+						    	<p:outputLabel for="@next" value="Nombre de la vía:" />
+									<br/>
+									<p:inputText id="nombreVia" disabled="true" style="width:75%"
+										value="#{categorizarViaBean.via.nombre}"/>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Departamento:" />
+									<br/>
+									<p:inputText id="departamento" disabled="true"
+										value="#{categorizarViaBean.via.municipio.departamento.nombre}" />
+						    </div>
+						    
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Municipio:" />
+									<br/>
+									<p:inputText id="municipio" disabled="true"
+										value="#{categorizarViaBean.via.municipio.nombre}" />
+						    </div>
+						    
+							<div class="ui-g-6">
+						    	<p:outputLabel for="@next" value="Nombre del funcionario:" />
+									<br/>
+									<p:inputText id="funcionario" style="width:75%"
+										value="#{categorizarViaBean.via.categorizacion.funcionario}" />
+						    </div>
+						    <div class="ui-g-6">
+						    		<p:outputLabel for="@next" value="Fecha de clasificación:" />
+									<br/>
+									<p:calendar id="fecha" value="#{categorizarViaBean.via.categorizacion.fecha}"  showOn="button"/>
+						    </div>
+						</div>
+		    		</p:panel>	
+	<!--     		FUNCIONALIDAD -->
+					<p:panel id="funcionalidad" style="margin-bottom:20px" toggleable="true" collapsed="true">
+					<f:facet name="header">
+					    <h:outputText value="PARTE 1.- FUNCIONALIDAD" style="font-weight: bold;"/>
+					    <i class="pi pi-info-circle" title="A continuación deberá marcar según el conocimiento de la vía con una X según corresponda (ver numeral 5,1 de la guía para realizar la Categorización de la Red Vial Nacional). (*) De acuerdo con lo definido en el artículo 12 de la Ley 105 de 1993."></i>
+					</f:facet>	
+						 <div class="ui-g">
+		<!--     		FUNCIONALIDAD 1-->		
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="a) ¿Es una vía Troncal o Transversal? (Consultar la Resolución 339 del INVIAS año 1999 y Decreto
+																	1735 del MT año 2001 o los que los modifiquen)" />
+								
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad1" value="#{categorizarViaBean.via.categorizacion.funcionalidad1}" disabled="#{categorizarViaBean.funcionalidad1Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad1', categorizarViaBean.via.categorizacion.funcionalidad1)}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+		
+		<!--     		FUNCIONALIDAD 2-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="b) El tramo a categorizar forma parte de una vía que conecta dos capitales de departamento" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad2" value="#{categorizarViaBean.via.categorizacion.funcionalidad2}" disabled="#{categorizarViaBean.funcionalidad2Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad2', categorizarViaBean.via.categorizacion.funcionalidad2)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		FUNCIONALIDAD 3-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="c) Conecta un paso fronterizo principal (Establecido formalmente como tal) con una ciudad capital
+																	o una zona de producción o de consumo(*)." />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad3" value="#{categorizarViaBean.via.categorizacion.funcionalidad3}" disabled="#{categorizarViaBean.funcionalidad2Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad3', categorizarViaBean.via.categorizacion.funcionalidad3)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		OBSERVACIONES 1,2,3-->
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad1Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad1Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad2Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad2Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad3Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad3Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+		<!--     		FUNCIONALIDAD 4-->		
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="d)  ¿Conecta una ciudad principal con una zona de producción o de consumo(*) o con algún puerto marítimo o  puerto fluvial que genere trasbordo intermodal?" />
+								
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad4" value="#{categorizarViaBean.via.categorizacion.funcionalidad4}" disabled="#{categorizarViaBean.funcionalidad4Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad4', categorizarViaBean.via.categorizacion.funcionalidad4)}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+		
+		<!--     		FUNCIONALIDAD 5-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="e) La vía conecta: &lt;br/&gt; &#160;&#160;&#160;1) Una capital de departamento con una cabecera municipal &lt;br/&gt; &#160;&#160;&#160;2) Dos o más municipios entre sí o se encuentra incluida dentro de las vías clasificadas en el plan vial regional del departamento. (Consultar el plan vial regional del departamento)"  escape="false"/>
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad5" value="#{categorizarViaBean.via.categorizacion.funcionalidad5}" disabled="#{categorizarViaBean.funcionalidad5Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad5', categorizarViaBean.via.categorizacion.funcionalidad5)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		FUNCIONALIDAD 6-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="f) La vía realiza interconexión: &lt;br/&gt; &#160;&#160;&#160;1)Unicamente a nivel veredal &lt;br/&gt; &#160;&#160;&#160;2)Entre la vereda y la capital de departamento &lt;br/&gt; &#160;&#160;&#160;3)Entre la vereda y una cabecera municipal &lt;br/&gt; &#160;&#160;&#160;4)Entre la vereda y una vía de primer o segundo orden" escape="false"/>
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="funcionalidad6" value="#{categorizarViaBean.via.categorizacion.funcionalidad6}" disabled="#{categorizarViaBean.funcionalidad6Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeFuncionalidadCheck('funcionalidad6', categorizarViaBean.via.categorizacion.funcionalidad6)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		OBSERVACIONES 4,5,6-->
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad4Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad4Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad5Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad5Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="funcionalidad6Obs" value="#{categorizarViaBean.via.categorizacion.funcionalidad6Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							
+							
+						 </div>			
+					</p:panel>
+		<!--     		TRÁNSITO -->
+					<p:panel id="transito" style="margin-bottom:20px" toggleable="true" collapsed="true">
+					<f:facet name="header">
+					    <h:outputText value="PARTE 2.- TRÁNSITO PROMEDIO DIARIO" style="font-weight: bold;"/>
+					    <i class="pi pi-info-circle" title="A continuación, usted deberá clasificar  por medio de una X, el tránsito promedio diario de la vía (ver numeral 5,2 de la guía para realizar la Categorización de la Red Vial Nacional)"></i>
+					</f:facet>	
+						 <div class="ui-g">
+		<!--     		TRÁNSITO 1-->		
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Mayores a 700 veh/día" />
+								
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="transito1" value="#{categorizarViaBean.via.categorizacion.transito1}" disabled="#{categorizarViaBean.transito1Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeTransitoCheck('transito1', categorizarViaBean.via.categorizacion.transito1)}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+		
+		<!--     		TRÁNSITO 2-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Entre 150 veh/día a 699 veh/día" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="transito2" value="#{categorizarViaBean.via.categorizacion.transito2}" disabled="#{categorizarViaBean.transito2Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeTransitoCheck('transito2', categorizarViaBean.via.categorizacion.transito2)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		TRÁNSITO 3-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Entre 1 veh/día a 149 veh/día" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="transito3" value="#{categorizarViaBean.via.categorizacion.transito3}" disabled="#{categorizarViaBean.transito3Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeTransitoCheck('transito3', categorizarViaBean.via.categorizacion.transito3)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		OBSERVACIONES 1,2,3-->
+							<div class="ui-g-4">
+								<p:inputTextarea id="transito1Obs" value="#{categorizarViaBean.via.categorizacion.transito1Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="transito2Obs" value="#{categorizarViaBean.via.categorizacion.transito2Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="transito3Obs" value="#{categorizarViaBean.via.categorizacion.transito3Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>					
+						 </div>			
+					</p:panel>
+					
+		<!--     		DISEÑO -->
+					<p:panel id="diseno" style="margin-bottom:20px" toggleable="true" collapsed="true">
+					<f:facet name="header">
+					    <h:outputText value="PARTE 3.- DISEÑO GEOMÉTRICO" style="font-weight: bold;"/>
+					    <i class="pi pi-info-circle" title="A continuación, usted deberá clasificar  por medio de una X, la geometría de la vía ( ver numerales 3,2 y 5,3 de la guía para categorización de la Red Vial Nacional)"></i>
+					</f:facet>	
+						 <div class="ui-g">
+		<!--     		DISEÑO 1-->		
+						 	<div class="ui-g-2">
+						 		<p:outputLabel for="@next" value="Doble calzada" />
+								
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="diseno1" value="#{categorizarViaBean.via.categorizacion.diseno1}" disabled="#{categorizarViaBean.diseno1Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeDisenoCheck('diseno1', categorizarViaBean.via.categorizacion.diseno1)}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+		
+		<!--     		DISEÑO 2-->
+						 	<div class="ui-g-2">
+						 		<p:outputLabel for="@next" value="Calzada sencilla mayor o igual a 7,30m" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="diseno2" value="#{categorizarViaBean.via.categorizacion.diseno2}" disabled="#{categorizarViaBean.diseno2Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeDisenoCheck('diseno2', categorizarViaBean.via.categorizacion.diseno2)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		DISEÑO 3-->
+						 	<div class="ui-g-2">
+						 		<p:outputLabel for="@next" value="Calzada sencilla entre 6,01m y 7,29m" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="diseno3" value="#{categorizarViaBean.via.categorizacion.diseno3}" disabled="#{categorizarViaBean.diseno3Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeDisenoCheck('diseno3', categorizarViaBean.via.categorizacion.diseno3)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		DISEÑO 4-->
+						 	<div class="ui-g-2">
+						 		<p:outputLabel for="@next" value="Calzada sencilla menor o igual a 6,00m" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="diseno4" value="#{categorizarViaBean.via.categorizacion.diseno4}" disabled="#{categorizarViaBean.diseno4Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangeDisenoCheck('diseno4', categorizarViaBean.via.categorizacion.diseno4)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		OBSERVACIONES 1,2,3,4-->
+							<div class="ui-g-3">
+								<p:inputTextarea id="diseno1Obs" value="#{categorizarViaBean.via.categorizacion.diseno1Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-3">
+								<p:inputTextarea id="diseno2Obs" value="#{categorizarViaBean.via.categorizacion.diseno2Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-3">
+								<p:inputTextarea id="diseno3Obs" value="#{categorizarViaBean.via.categorizacion.diseno3Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>	
+							<div class="ui-g-3">
+								<p:inputTextarea id="diseno4Obs" value="#{categorizarViaBean.via.categorizacion.diseno4Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>					
+						 </div>			
+					</p:panel>
+	<!--     		POBLACIÓN -->
+					<p:panel id="poblacion" style="margin-bottom:20px" toggleable="true" collapsed="true">
+					<f:facet name="header">
+					    <h:outputText value="PARTE 4.- POBLACIÓN" style="font-weight: bold;"/>
+					    <i class="pi pi-info-circle" title="A continuación, usted deberá clasificar  por medio de una X, la población que une la vía  ( ver numerales 3,4 y 5,4 de la guía para categorización de la Red Vial Nacional). Para conexiones entre capitales de departamento con veredas o poblaciones menores, se debe tomar la población menor"></i>
+					</f:facet>	
+						 <div class="ui-g">
+		<!--     		POBLACIÓN 1-->		
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Población de capitales de departamento, paso de frontera y/o puertos" />
+								
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="poblacion1" value="#{categorizarViaBean.via.categorizacion.poblacion1}" disabled="#{categorizarViaBean.poblacion1Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangePoblacionCheck('poblacion1', categorizarViaBean.via.categorizacion.poblacion1)}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+		
+		<!--     		POBLACIÓN 2-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Cabeceras municipales con más de 15,000 habitantes" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="poblacion2" value="#{categorizarViaBean.via.categorizacion.poblacion2}" disabled="#{categorizarViaBean.poblacion2Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangePoblacionCheck('poblacion2', categorizarViaBean.via.categorizacion.poblacion2)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		POBLACIÓN 3-->
+						 	<div class="ui-g-3">
+						 		<p:outputLabel for="@next" value="Cabeceras municipales, poblaciones con menos de 15,000 habitantes, veredas o corregimientos" />
+						 	</div>
+						 	<div class="ui-g-1">
+						 		<p:selectBooleanCheckbox id="poblacion3" value="#{categorizarViaBean.via.categorizacion.poblacion3}" disabled="#{categorizarViaBean.poblacion3Disabled}">
+						 			<p:ajax listener="#{categorizarViaBean.onChangePoblacionCheck('poblacion3', categorizarViaBean.via.categorizacion.poblacion3)}"/>
+								</p:selectBooleanCheckbox>
+							</div>	
+		<!--     		OBSERVACIONES 1,2,3-->
+							<div class="ui-g-4">
+								<p:inputTextarea id="poblacion1Obs" value="#{categorizarViaBean.via.categorizacion.poblacion1Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="poblacion2Obs" value="#{categorizarViaBean.via.categorizacion.poblacion2Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+							<div class="ui-g-4">
+								<p:inputTextarea id="poblacion3Obs" value="#{categorizarViaBean.via.categorizacion.poblacion3Obs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>					
+						 </div>			
+					</p:panel>
+				</p:tab>
+				<p:tab title="Matriz de resultados">
+					<p:panelGrid style="margin-top:20px">
+					    <f:facet name="header">
+					        <p:row>
+					            <p:column colspan="8">Resultados Categorización</p:column>
+					        </p:row>
+					        <p:row>
+					            <p:column colspan="2">CATEGORÍA</p:column>
+					            <p:column >FUNCIONALIDAD</p:column>
+					            <p:column >TRÁNSITO PROMEDIO</p:column>
+					            <p:column>DISEÑO GEOMÉTRTICO</p:column>
+					            <p:column>POBLACIÓN</p:column>
+					            <p:column rowspan="2">PUNTAJE</p:column>
+					            <p:column rowspan="2">CLASIFICACIÓN</p:column>
+					        </p:row>
+					        <p:row>
+					            <p:column colspan="2">PONDERAIÓN</p:column>
+					            <p:column >40</p:column>
+					            <p:column >20</p:column>
+					            <p:column>20</p:column>
+					            <p:column>20</p:column>
+						    </p:row>
+					    </f:facet>
+					    <p:row>
+					        <p:column>1</p:column>
+					        <p:column>VÍA DE PRIMER ORDEN</p:column>
+					 		<p:column><h:outputText id="resultFuncionalidad1Orden" value="#{categorizarViaBean.via.categorizacion.resultFuncionalidad1Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultTransito1Orden" value="#{categorizarViaBean.via.categorizacion.resultTransito1Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultDiseno1Orden" value="#{categorizarViaBean.via.categorizacion.resultDiseno1Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultPoblacion1Orden" value="#{categorizarViaBean.via.categorizacion.resultPoblacion1Orden}"/></p:column>
+					 		<p:column style="font-weight: bold;"><h:outputText id="total1Orden" value="#{categorizarViaBean.via.categorizacion.total1Orden}"/></p:column>
+					 		<p:column rowspan="3" style="font-weight: bold; font-size: 20px;"><h:outputText id="categoriaFinal" value="#{categorizarViaBean.via.categorizacion.categoria.nombre}"/></p:column>
+					 	</p:row>
+						<p:row>
+					        <p:column>2</p:column>
+					        <p:column>VÍA DE SEGUNDO ORDEN</p:column>
+					 		<p:column><h:outputText id="resultFuncionalidad2Orden" value="#{categorizarViaBean.via.categorizacion.resultFuncionalidad2Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultTransito2Orden" value="#{categorizarViaBean.via.categorizacion.resultTransito2Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultDiseno2Orden" value="#{categorizarViaBean.via.categorizacion.resultDiseno2Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultPoblacion2Orden" value="#{categorizarViaBean.via.categorizacion.resultPoblacion2Orden}"/></p:column>
+					 		<p:column style="font-weight: bold;"><h:outputText id="total2Orden" value="#{categorizarViaBean.via.categorizacion.total2Orden}"/></p:column>
+<!-- 					 		<p:column style="font-weight: bold;">VÍA DE SEGUNDO ORDEN</p:column> -->
+					 	</p:row>
+						<p:row>
+					        <p:column>3</p:column>
+					        <p:column>VÍA DE TERCER ORDEN</p:column>
+					 		<p:column><h:outputText id="resultFuncionalidad3Orden" value="#{categorizarViaBean.via.categorizacion.resultFuncionalidad3Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultTransito3Orden" value="#{categorizarViaBean.via.categorizacion.resultTransito3Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultDiseno3Orden" value="#{categorizarViaBean.via.categorizacion.resultDiseno3Orden}"/></p:column>
+					 		<p:column><h:outputText id="resultPoblacion3Orden" value="#{categorizarViaBean.via.categorizacion.resultPoblacion3Orden}"/></p:column>
+					 		<p:column style="font-weight: bold;"><h:outputText id="total3Orden" value="#{categorizarViaBean.via.categorizacion.total3Orden}"/></p:column>
+<!-- 					 		<p:column style="font-weight: bold;">VÍA DE TERCER ORDEN</p:column> -->
+					 	</p:row>
+				  </p:panelGrid>
+				</p:tab>
+			</p:tabView>	
+			<div style="padding: 10px;">
+				<p:defaultCommand target="dummy"/>
+				<p:commandButton id="dummy" process="@none" global="false" style="display:none;"/> <!-- Botón oculto que no realiza nada para que no se envíe el formulario y guarde al pulsar enter -->
+				<p:commandButton value="Guardar" id="guardarCategorizacion" style="margin-bottom:30px;" actionListener="#{categorizarViaBean.guardarCategorizacion}"/>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

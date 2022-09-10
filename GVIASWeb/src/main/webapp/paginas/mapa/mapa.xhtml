@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">	
+	<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+	
+		<ui:param name="hideBreadCrumb" value="false" />
+		<ui:define name="content">
+		<div style="width: 100%; height: 400px; position: relative;" id="map" />
+		    <div id="popup" class="ol-popup">
+		      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+		      <div id="popup-content"></div>
+		    </div>
+		
+		<h:form id="mapaForm">
+
+		 </h:form>
+	</ui:define>
+	</ui:composition>
+</html>

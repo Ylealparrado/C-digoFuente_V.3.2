@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form>
+	<h4>Seleccione un municipio y un módulo</h4>
+
+	<div class="p-grid">
+		<div class="p-col-2">
+			<p:outputLabel for="@next" value="Departamento:" />
+			<br />
+			<p:selectOneMenu style="width:200px" id="comboDepartamento" value="#{inicioBean.departamentoSelected}" converter="departamentoConverter">
+				<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+				<f:selectItems value="#{inicioBean.listaDepartamentos}" var="objeto" itemValue="#{objeto}" itemLabel="#{objeto.nombre}" />
+				<p:ajax process="@this" event="change" listener="#{inicioBean.onChangeDepartamento(inicioBean.departamentoSelected)}" update="comboMunicipio, botonCategorizarVias, botonPlanesViales, botonSincronizarDatos"/>
+			</p:selectOneMenu>
+			
+			<br/>
+			<br/>
+			<p:commandButton id="botonCategorizarVias" value="Categorizar Vías"
+									icon="pi pi-circle-off" action="#{migaBean.abrirListarViasCategorizacion(inicioBean.municipioSelected.idMunicipio, inicioBean.municipioSelected.nombre)}" style="width: 80%;" disabled="#{inicioBean.botonesDisabled}"/>
+			<br/>
+			<br/>
+			<p:commandButton id="botonPlanesViales" value="Planes Viales"
+									icon="pi pi-circle-off" action="#{migaBean.abrirListarViasPlanVial(inicioBean.municipioSelected.idMunicipio, inicioBean.municipioSelected.nombre)}" style="width: 80%;" disabled="#{inicioBean.botonesDisabled}"/>
+			<br/>
+			<br/>
+			<p:commandButton id="botonSincronizarDatos" value="Sincronizar Vías" title="Sincroniza los datos alfanuméricos de las vías. Esta opción se debe utilizar cuando se añadan nuevas geometrías al inventario"
+									icon="pi pi-cog" action="#{inicioBean.sincronizarDatos(inicioBean.municipioSelected.idMunicipio)}" style="width: 80%;" disabled="#{inicioBean.botonesDisabled}"/>
+
+			<br/>
+			<br/>
+<!-- 			<p:commandButton id="botonMapa" value="Mapa" title="Mapa" icon="pi pi-cog" action="#{migaBean.abrirMapa(inicioBean.municipioSelected.nombre)}" style="width: 80%;" disabled="#{inicioBean.botonesDisabled}"/> -->
+		
+		</div>
+		
+		<div class="p-col-2">
+			<p:outputLabel for="@next" value="Municipio:" />
+			<br />
+			<p:selectOneMenu style="width:200px" id="comboMunicipio" value="#{inicioBean.municipioSelected}" converter="municipioConverter" filter="true" filterMatchMode="startsWith">
+				<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+				<f:selectItems value="#{inicioBean.listaMunicipios}" var="objeto" itemValue="#{objeto}" itemLabel="#{objeto.nombre}" />
+ 				<p:ajax listener="#{inicioBean.onChangeMunicipio(inicioBean.municipioSelected)}" update="botonCategorizarVias, botonPlanesViales, botonSincronizarDatos"/>
+			</p:selectOneMenu>
+		</div>
+		<div class="p-col-2"/>
+		<div class="p-col-6">
+			<p:graphicImage name="imagenes/carretera.png" width="80%" style="text-align:center;"/>	 
+		</div>
+    </div>
+	
+	
+</h:form>
+</html>

@@ -1,0 +1,1271 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+	<ui:param name="hideBreadCrumb" value="true" />
+	<ui:define name="content">
+		<p:panel header="Gestión Viales GIS" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panelMapaPlanVial">
+			<div style="width: 100%; height: 400px; position: relative;" id="map" />
+		</p:panel>
+		<h:form id="planVialForm">
+			<div class="p-col-12 p-md-12 p-lg-7 p-xl-7">
+					<p:steps activeIndex="2" readonly="false">
+						<p:menuitem value="Inicio" partialSubmit="false" action="#{migaBean.abrirBienvenida}" title="Ir a inicio"/>
+						<p:menuitem value="Plan vial municipio: #{migaBean.municipioNombre}" action="#{migaBean.abrirListarViasPlanVial()}"/>
+						<p:menuitem value="Datos para la vía: #{planVialBean.via.codVia}" />
+					</p:steps>
+			</div>
+			<p:tabView id="PlanVialTabView">
+<!-- RED VIAL -->
+				<p:tab title="Red Vial">
+					<p:panel id="panelRedVial">
+					<f:facet name="header">
+					    <h:outputText value="RED VIAL" style="font-weight: bold;"/>
+					</f:facet>
+				        <div class="ui-g">
+						    <div class="ui-md-4 ui-lg-2">
+						    	<p:outputLabel for="@next" value="Código de la vía:" />
+									<br/>
+									<p:inputText id="codigoVia" disabled="true" 
+										value="#{planVialBean.via.codVia}" />
+						    </div>
+						    <div class="ui-md-4 ui-lg-2">
+						    	<p:outputLabel for="@next" value="Nombre de la vía:" />
+									<br/>
+									<p:inputText id="nombreVia" disabled="true" 
+										value="#{planVialBean.via.nombre}" />
+						    </div>
+						    <div class="ui-md-4 ui-lg-2">
+						    		<p:outputLabel for="@next" value="Categoría:" />
+									<br/>
+									<p:inputText id="municipio" disabled="true"
+										value="#{planVialBean.via.categorizacion.categoria.nombre}" />
+						    </div>
+						    <div class="ui-md-4 ui-lg-2">
+						    	<p:outputLabel for="@next" value="Competencia:" />
+									<br/>
+						    		<p:selectOneMenu style="width:200px" id="comboCompetencia" value="#{planVialBean.via.competencia}" converter="competenciaConverter">
+										<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+										<f:selectItems value="#{planVialBean.listaCompetencias}" var="objeto" itemValue="#{objeto}" itemLabel="#{objeto.nombre}" />
+									</p:selectOneMenu>
+						    </div>
+						    <div class="ui-md-4 ui-lg-2">
+						    	<p:outputLabel for="@next" value="Longitud (km):" />
+									<br/>
+									<p:inputText id="longitudTotal" disabled="true"
+										value="#{planVialBean.via.longitudTotal}" />
+						    </div>
+						    <div class="ui-md-4 ui-lg-2">
+						    	<p:outputLabel for="@next" value="Ancho Promedio:" />
+									<br/>
+									<p:inputNumber id="anchoPromedio" symbol="m" symbolPosition="s" value="#{planVialBean.via.anchoPromedio}"/>
+						    </div>
+						    <div class="ui-md-12 ui-lg-6">
+						    	<p:panelGrid style="margin-top:20px"> 
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="4">Vías pavimentadas (km)</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Bueno</p:column>
+								            <p:column>Regular</p:column>
+								            <p:column>Malo</p:column>
+								            <p:column>Total</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialBueno" id="pavBueno" value="#{planVialBean.via.pavimBueno}">
+												<p:ajax event="change" listener="#{planVialBean.onChangePavim()}" />
+											</p:inputText>
+										 </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialRegular" id="pavRegular" value="#{planVialBean.via.pavimRegular}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangePavim()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialMalo" id="pavMalo" value="#{planVialBean.via.pavimMalo}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangePavim()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column><p:inputText styleClass="inputPlanvial" id="pavTotal" value="#{planVialBean.via.pavimTotal}" disabled="true"/></p:column>
+								 	</p:row>
+									
+							  </p:panelGrid>
+						    </div>
+						    <div class="ui-md-12 ui-lg-6">
+						    	<p:panelGrid style="margin-top:20px">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="4">Vías en afirmado (km)</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Bueno</p:column>
+								            <p:column >Regular</p:column>
+								            <p:column >Malo</p:column>
+								            <p:column >Total</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialBueno" id="afirmBueno" value="#{planVialBean.via.afirmBueno}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeAfirm()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialRegular" id="afirmRegular" value="#{planVialBean.via.afirmRegular}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeAfirm()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialMalo" id="afirmMalo" value="#{planVialBean.via.afirmMalo}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeAfirm()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column><p:inputText styleClass="inputPlanvial" id="afirmTotal" value="#{planVialBean.via.afirmTotal}" disabled="true"/></p:column>
+								 	</p:row>
+							  </p:panelGrid>
+						    </div>
+						    <div class="ui-md-12 ui-lg-6">
+						    	<p:panelGrid style="margin-top:20px">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="4">Vías en tierra (km)</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Bueno</p:column>
+								            <p:column >Regular</p:column>
+								            <p:column >Malo</p:column>
+								            <p:column >Total</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialBueno" id="tierraBueno" value="#{planVialBean.via.tierraBueno}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeTierra()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialRegular" id="tierraRegular" value="#{planVialBean.via.tierraRegular}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeTierra()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column>
+								         	<p:inputText styleClass="inputPlanvialMalo" id="tierraMalo" value="#{planVialBean.via.tierraMalo}">
+								         		<p:ajax event="change" listener="#{planVialBean.onChangeTierra()}" />
+								         	</p:inputText>
+								         </p:column>
+								         <p:column><p:inputText styleClass="inputPlanvial" id="tierraTotal" value="#{planVialBean.via.tierraTotal}" disabled="true"/></p:column>
+								 	</p:row>
+							  </p:panelGrid>
+						    </div>
+						    <div class="ui-md-12 ui-lg-6">
+						    	<p:panelGrid style="margin-top:20px">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="4">Vías con mejoramiento (km)</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Bueno</p:column>
+								            <p:column >Regular</p:column>
+								            <p:column >Malo</p:column>
+								            <p:column >Total</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+				         					<p:inputText styleClass="inputPlanvialBueno" id="mejoraBueno" value="#{planVialBean.via.mejoraBueno}">
+				         						<p:ajax event="change" listener="#{planVialBean.onChangeMejora()}" />
+				         					</p:inputText>
+				         				</p:column>
+								        <p:column>
+								        	<p:inputText styleClass="inputPlanvialRegular" id="mejoraRegular" value="#{planVialBean.via.mejoraRegular}">
+								        		<p:ajax event="change" listener="#{planVialBean.onChangeMejora()}" />
+								        	</p:inputText>
+								        </p:column>
+								        <p:column>
+								        	<p:inputText styleClass="inputPlanvialMalo" id="mejoraMalo" value="#{planVialBean.via.mejoraMalo}">
+								        		<p:ajax event="change" listener="#{planVialBean.onChangeMejora()}" />
+								        	</p:inputText>
+								        </p:column>
+								        <p:column><p:inputText styleClass="inputPlanvial" id="mejoraTotal" value="#{planVialBean.via.mejoraTotal}" disabled="true"/></p:column>
+								 	</p:row>
+							  </p:panelGrid>
+						    </div>
+						     <div class="ui-md-6 ui-lg-3">
+						     	<p:panelGrid>
+						     		<p:row>
+						     			<p:column>
+						     				<p:outputLabel for="estudios" value="Cuenta con estudios y diseños" />
+						     			</p:column>
+						     			<p:column>
+											<p:selectBooleanCheckbox id="estudios" value="#{planVialBean.via.estudiosDiseno}"/>
+										</p:column>	
+						     		</p:row>
+						     		<p:row>
+						     			<p:column>
+						     				<p:outputLabel for="proyEstructurado" value="Cuenta con proyecto estructurado" />
+						     			</p:column>
+						     			<p:column>
+											<p:selectBooleanCheckbox id="proyEstructurado" value="#{planVialBean.via.proyEstructurado}"/>
+										</p:column>
+						     		</p:row>
+						     		<p:row>
+						     			<p:column>
+						     				<p:outputLabel for="proyAprobado" value="Cuenta con proyecto aprobado" />
+						     			</p:column>
+						     			<p:column>
+											<p:selectBooleanCheckbox id="proyAprobado" value="#{planVialBean.via.proyAprobado}"/>
+										</p:column>	
+						     		</p:row>
+						     	</p:panelGrid>
+						 	</div>
+							<div class="ui-md-9 ui-lg-9">
+								<p:inputTextarea id="observaciones" value="#{planVialBean.via.observaciones}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Observaciones"/>
+							</div>
+						</div>
+		    		</p:panel>	
+				</p:tab>
+<!-- TECNICOS -->
+				<p:tab title="Técnicos">
+					<p:panel id="panelTecnicos" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="TÉCNICOS" style="font-weight: bold;"/>
+					</f:facet>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="6">Conectividad Modal</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Con vía primaria</p:column>
+								            <p:column>Con vía secundaria</p:column>
+								            <p:column>Con vía terciaria</p:column>
+								            <p:column>Con vía fluvial</p:column>
+								            <p:column>Con vía aérea</p:column>
+								            <p:column>CONECTIVIDAD MODAL</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+				         					<p:selectBooleanCheckbox id="viaPrimaria" value="#{planVialBean.via.tecnicosPV.transpViaPrimaria}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoModal()}"/>
+											</p:selectBooleanCheckbox>
+				         				</p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="viaSecundaria" value="#{planVialBean.via.tecnicosPV.transpViaSecundaria}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoModal()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="viaTerciaria" value="#{planVialBean.via.tecnicosPV.transpViaTerciaria}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoModal()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="viaFluvial" value="#{planVialBean.via.tecnicosPV.transpViaFluvial}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoModal()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="viaAerea" value="#{planVialBean.via.tecnicosPV.transpViaAerea}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoModal()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column rowspan="2"><p:inputTextarea id="conectividadModalPNVIR" value="#{planVialBean.via.tecnicosPV.tecConectividadModalPNVIR.descripcion}" autoResize="false" styleClass="textAreaObservaciones" disabled="true"/></p:column>
+								 	</p:row>
+									<p:row>
+				         				<p:column>
+				         					<p:inputTextarea id="viaPrimariaObs" value="#{planVialBean.via.tecnicosPV.transpViaPrimariaObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Vías primarias..."/>
+				         				</p:column>
+								        <p:column>
+											<p:inputTextarea id="viaSecundariaObs" value="#{planVialBean.via.tecnicosPV.transpViaSecundariaObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Vías secundarias..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="viaTerciariaObs" value="#{planVialBean.via.tecnicosPV.transpViaTerciariaObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Vías terciarias..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="viaFluvialObs" value="#{planVialBean.via.tecnicosPV.transpViaFluvialObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Vías fluviales..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="viaAereaObs" value="#{planVialBean.via.tecnicosPV.transpViaAereaObs}" autoResize="false"  styleClass="textAreaObservaciones" placeholder="Vías aéreas..."/>
+								        </p:column>
+								 	</p:row>
+							  </p:panelGrid>
+							</div>
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="4">Conectividad Regional</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Con otros departamentos</p:column>
+								            <p:column>Con subregión PDET y/o ZOMAC</p:column>
+								            <p:column>Con cabeceras municipales</p:column>
+								            <p:column>CONECTIVIDAD REGIONAL</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+				         					<p:selectBooleanCheckbox id="otrosDepartamentos" value="#{planVialBean.via.tecnicosPV.conectOtrosDepartamentos}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoRegional()}"/>
+											</p:selectBooleanCheckbox>
+				         				</p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="pdetZomac" value="#{planVialBean.via.tecnicosPV.conectPdetZomac}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoRegional()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="cabeceraMunicipal" value="#{planVialBean.via.tecnicosPV.conectCabeceraMunicipal}">
+							 					<p:ajax listener="#{planVialBean.onChangeTecnicoRegional()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column rowspan="2"><p:inputTextarea id="conectividadRegionalPNVIR" value="#{planVialBean.via.tecnicosPV.tecConectividadRegionalPNVIR.descripcion}"  autoResize="false" styleClass="textAreaObservaciones" disabled="true"/></p:column>
+								 	</p:row>
+									<p:row>
+				         				<p:column>
+				         					<p:inputTextarea id="otrosDepartamentosObs" value="#{planVialBean.via.tecnicosPV.conectOtrosDepartamentosObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Departamentos..."/>
+				         				</p:column>
+								        <p:column>
+											<p:inputTextarea id="pdetZomacObs" value="#{planVialBean.via.tecnicosPV.conectPdetZomacObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Subregiones..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="cabeceraMunicipalObs" value="#{planVialBean.via.tecnicosPV.conectCabeceraMunicipalObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Cabeceras municipales..."/>
+								        </p:column>
+								 	</p:row>
+							  </p:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+				</p:tab>
+<!-- POBLACIÓN BENEFICIADA -->
+				<p:tab title="Población Beneficiada">
+					<p:panel id="panelPoblacion" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="POBLACIÓN BENEFICIADA" style="font-weight: bold;"/>
+					</f:facet>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column id="veredasAfectadasVias">Veredas afectadas por la vía <i class="pi pi-info-circle"></i></p:column>
+								            <p:tooltip id="toolTipVeredasAfectadasVias" value="Veredas / Corregimientos / Comunidades" for="veredasAfectadasVias" position="top"/>
+								        </p:row>
+								     </f:facet>
+							        	<p:row>
+							        		<p:column>
+									            <p:pickList id="listaVeredas"
+													value="#{planVialBean.veredasDualList}" var="vereda"
+													itemLabel="#{vereda.nombre} - Población: #{vereda.poblacion} hab." itemValue="#{vereda}"
+													styleClass="veredasAfectadas" converter="picklistConverter" 
+													showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
+													<f:facet name="sourceCaption">Veredas del municipio</f:facet>
+													<f:facet name="targetCaption">Veredas afectadas por la vía</f:facet>
+										
+													<p:ajax event="transfer" listener="#{planVialBean.onPickListSelect}"/>
+												</p:pickList>
+										</p:column>
+								    </p:row>
+								</p:panelGrid>							
+							</div>
+							<div class="ui-md-12 ui-lg-12" style="text-align: center">
+								<p:outputLabel for="@next" value="Población total veredas:" />
+								<br/>
+								<p:inputText id="poblacionTotalVeredas" disabled="true"
+									value="#{planVialBean.via.poblacionPV.poblacionTotalVeredas}" />
+							</div>
+							<div class="ui-md-4 ui-lg-2">
+								<p:outputLabel for="@next" value="% población beneficiada:" />
+								<br/>
+								<p:inputNumber id="porcPoblacionBeneficiada" symbol="%" symbolPosition="s" value="#{planVialBean.via.poblacionPV.porcPoblacionBeneficiada}" disabled="true"/>
+							</div>
+							<div class="ui-md-6 ui-lg-3">
+								<p:outputLabel for="@next" value="Indicador población beneficiada:" />
+								<br/>
+								<p:inputTextarea id="indicadorPoblacionBeneficiada" autoResize="false" styleClass="textAreaObservaciones"
+									value="#{planVialBean.via.poblacionPV.socPoblacionBeneficiadaPNVIR.descripcion}" disabled="true"/>
+							</div>
+							<div class="p-col-2"/>
+							<div class="ui-md-4 ui-lg-2">
+								<p:outputLabel for="@next" value="% ICV:" title="Indice de Concentración de Víctimas del conflicto"/>
+								<br/>
+								<p:inputNumber id="icv" symbol="%" symbolPosition="s" value="#{planVialBean.via.municipio.icv}" disabled="true">
+									<p:ajax event="change" listener="#{planVialBean.onChangePorcICV}" />
+								</p:inputNumber>
+							</div>
+							<div class="ui-md-6 ui-lg-3">
+								<p:outputLabel for="@next" value="Indicador ICV:" />
+								<br/>
+								<p:inputTextarea id="indicadorICV" autoResize="false" styleClass="textAreaObservaciones"
+									value="#{planVialBean.via.poblacionPV.socIcvPNVIR.descripcion}" disabled="true"/>
+							</div>
+							<div class="ui-md-12 ui-lg-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column id="pertenenciaEtnica" colspan="5">PERTENENCIA ÉTNICA <i class="pi pi-info-circle"></i></p:column>
+								            <p:tooltip id="toolTipPertenenciaEtnica" for="pertenenciaEtnica"  value="Se deben introducir el dato de población, no porcentajes" position="top"/>
+								        </p:row>
+								        <p:row>
+								            <p:column>Indígena</p:column>
+								            <p:column>ROM</p:column>
+								            <p:column>San Andrés y Providencia</p:column>
+								            <p:column>Negro, mulato, afrocolombiano</p:column>
+								            <p:column>TOTAL</p:column>
+								        </p:row>
+									</f:facet>
+							        <p:row>
+							            <p:column>
+								            <p:inputNumber id="indigena" styleClass="inputNumberPlanvial" value="#{planVialBean.via.poblacionPV.etnicaIndigena}" thousandSeparator="" minValue="0" decimalPlaces="0">
+							        			<p:ajax event="change" listener="#{planVialBean.onChangeEtnica()}" />
+							        		</p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="rom" styleClass="inputNumberPlanvial" value="#{planVialBean.via.poblacionPV.etnicaRom}" thousandSeparator="" minValue="0" decimalPlaces="0">
+							        			<p:ajax event="change" listener="#{planVialBean.onChangeEtnica()}" />
+							        		</p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="raizal" styleClass="inputNumberPlanvial" value="#{planVialBean.via.poblacionPV.etnicaRaizal}" thousandSeparator="" minValue="0" decimalPlaces="0">
+							        			<p:ajax event="change" listener="#{planVialBean.onChangeEtnica()}" />
+							        		</p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="color" styleClass="inputNumberPlanvial" value="#{planVialBean.via.poblacionPV.etnicaColor}" thousandSeparator="" minValue="0" decimalPlaces="0">
+							        			<p:ajax event="change" listener="#{planVialBean.onChangeEtnica()}" />
+							        		</p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber  id="etniaTotal" styleClass="inputNumberPlanvial" value="#{planVialBean.via.poblacionPV.etnicaTotal}" disabled="true" thousandSeparator="" minValue="0" decimalPlaces="0"/>
+							        	</p:column>
+							        </p:row>
+								</p:panelGrid>
+							</div>
+							<div class="ui-md-12 ui-lg-12" style="text-align: center">
+								<p:outputLabel for="@next" value="Promueve sustitución de cultivos:" />
+								<br/>
+								<p:selectBooleanCheckbox styleClass="inputPlanvial" id="promueveSustitucion" value="#{planVialBean.via.poblacionPV.promueveSustitucionCultivos}" style="align: center;">
+					 					<p:ajax listener="#{planVialBean.onChangePromueveSustitucion()}"/>
+								</p:selectBooleanCheckbox>
+							</div>
+							<div class="ui-md-4 ui-lg-2">
+								<p:outputLabel for="@next" value="% población diferencial beneficiada:" />
+								<br/>
+								<p:inputNumber id="porcPoblacionDifBeneficiada" symbol="%" symbolPosition="s" value="#{planVialBean.via.poblacionPV.porcPoblacionDiferencialBeneficiada}" disabled="#{not planVialBean.via.poblacionPV.porcPobDiferMunicipio}"/>
+								<br/>
+								<p:outputLabel id="datosNivelMunicipal" for="@next" value="Datos a nivel municipal:"><i class="pi pi-info-circle"/></p:outputLabel>
+								 <p:tooltip id="toolTipDatosNivelMunicipal" for="datosNivelMunicipal"  value="Indica si los datos de población diferencial se recogen a nivel municipal (los mismos para todas las vías). En este caso el porcentaje se debe rellenar a mano y no se tendrá en cuenta en el recálculo." position="top"/>
+								<br/>
+								<p:selectBooleanCheckbox styleClass="inputPlanvial" id="porcPobDiferMunicipioId" value="#{planVialBean.via.poblacionPV.porcPobDiferMunicipio}" style="align: center;">
+										<p:ajax process="@this" event="change" update="porcPoblacionDifBeneficiada"/>
+								</p:selectBooleanCheckbox>
+							</div>
+							<div class="ui-md-6 ui-lg-3">
+								<p:outputLabel for="@next" value="Indicador población diferencial beneficiada:" />
+								<br/>
+								<p:inputTextarea id="indicadorPoblacionDif" autoResize="false" styleClass="textAreaObservaciones" 
+									value="#{planVialBean.via.poblacionPV.socPoblacionDiferencialPNVIR.descripcion}" disabled="true" />							        	
+							</div>
+							<div class="ui-md-12 ui-lg-12">
+								<p:commandButton id="botonSincronizarDatos" value="Actualizar porcentajes" title="Actualiza y muestra los porcentajes e indicadores de población. Esta operación se realiza automáticamente al guardar."
+									icon="pi pi-cog" action="#{planVialBean.onShowPorcentajes}"/>							        	
+							</div>
+						</div>
+					</p:panel>
+				</p:tab>				
+<!-- SOCIAL -->
+				<p:tab title="Centros Sociales">
+					<p:panel id="panelCentrosSociales" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="CENTROS SOCIALES" style="font-weight: bold;"/>
+					</f:facet>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="5">Centros Sociales</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Centros de salud</p:column>
+								            <p:column>Escuelas</p:column>
+								            <p:column>Centros comunitarios</p:column>
+								            <p:column>Turismo</p:column>
+								            <p:column>Escenario deportivo</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+				         					<p:selectBooleanCheckbox id="centrosSalud" value="#{planVialBean.via.centroSocialPV.centrosSalud}">
+							 					<p:ajax listener="#{planVialBean.onChangeCentroSocial()}"/>
+											</p:selectBooleanCheckbox>
+				         				</p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="escuelas" value="#{planVialBean.via.centroSocialPV.escuelas}">
+							 					<p:ajax listener="#{planVialBean.onChangeCentroSocial()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="comunitarios" value="#{planVialBean.via.centroSocialPV.comunitarios}">
+							 					<p:ajax listener="#{planVialBean.onChangeCentroSocial()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="turismo" value="#{planVialBean.via.centroSocialPV.turismo}">
+							 					<p:ajax listener="#{planVialBean.onChangeCentroSocial()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="deportivo" value="#{planVialBean.via.centroSocialPV.deportivo}">
+							 					<p:ajax listener="#{planVialBean.onChangeCentroSocial()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								 	</p:row>
+									<p:row>
+				         				<p:column>
+				         					<p:inputTextarea id="centrosSaludObs" value="#{planVialBean.via.centroSocialPV.centrosSaludObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Centros de salud..."/>
+				         				</p:column>
+								        <p:column>
+											<p:inputTextarea id="escuelasObs" value="#{planVialBean.via.centroSocialPV.escuelasObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Escuelas..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="comunitariosObs" value="#{planVialBean.via.centroSocialPV.comunitariosObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Centros..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="turismoObs" value="#{planVialBean.via.centroSocialPV.turismoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Turismo..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="deportivoObs" value="#{planVialBean.via.centroSocialPV.deportivoObs}" autoResize="false"  styleClass="textAreaObservacionesAlto" placeholder="Escenarios deportivos..."/>
+								        </p:column>
+								 	</p:row>
+							  </p:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+				</p:tab>
+<!-- AMBIENTAL -->
+				<p:tab title="Criterios Ambientales">
+					<p:panel id="panelCriteriosAmbientales" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="CRITERIOS AMBIENTALES" style="font-weight: bold;"/>
+					</f:facet>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column colspan="6">Criterios ambientales</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Superposición Parques Nacionales Naturales y/o Parques Naturales Regionales</p:column>
+								            <p:column>Superposición con áreas de especial interés ambiental</p:column>
+								            <p:column>Superposición con coberturas de bosques o áreas seminaturales</p:column>
+								            <p:column>Superposición con coberturas de áreas húmedas o superficies de agua</p:column>
+								            <p:column>Superposición con corredores de conectividad ecológica</p:column>
+								            <p:column>Superposición con áreas de distribución de fauna endémica, migratoria y/o en condición de amenaza o vulnerabilidad</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+				         					<p:selectBooleanCheckbox id="parquesNacionales" value="#{planVialBean.via.ambientalPV.superpParquesNacionales}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+				         				</p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="areasInteres" value="#{planVialBean.via.ambientalPV.superpAreasEspecialInteres}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="cobertBosques" value="#{planVialBean.via.ambientalPV.superpCoberturasBosques}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="cobertHumedas" value="#{planVialBean.via.ambientalPV.superpCoberturasAreasHumedas}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="corredores" value="#{planVialBean.via.ambientalPV.superpCorredoresEco}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="fauna" value="#{planVialBean.via.ambientalPV.superpAreasFauna}">
+							 					<p:ajax listener="#{planVialBean.onChangeAmbiental()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								 	</p:row>
+									<p:row>
+				         				<p:column>
+				         					<p:inputTextarea id="parquesNacionalesObs" value="#{planVialBean.via.ambientalPV.superpParquesNacionalesObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Parques..."/>
+				         				</p:column>
+								        <p:column>
+											<p:inputTextarea id="areasInteresObs" value="#{planVialBean.via.ambientalPV.superpAreasEspecialInteresObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Áreas interés..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="cobertBosquesObs" value="#{planVialBean.via.ambientalPV.superpCoberturasBosquesObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Coberturas bosques..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="cobertHumedasObs" value="#{planVialBean.via.ambientalPV.superpCoberturasAreasHumedasObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Coberturas húmedas..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="corredoresObs" value="#{planVialBean.via.ambientalPV.superpCorredoresEcoObs}" autoResize="false"  styleClass="textAreaObservacionesAlto" placeholder="Corredores..."/>
+								        </p:column>
+								        <p:column>
+				         					<p:inputTextarea id="faunaObs" value="#{planVialBean.via.ambientalPV.superpAreasFaunaObs}" autoResize="false"  styleClass="textAreaObservacionesAlto" placeholder="Áreas fauna..."/>
+								        </p:column>
+								 	</p:row>
+							  </p:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+				</p:tab>
+<!-- ECONÓMICO -->
+				<p:tab title="Económico">
+					<p:panel id="panelEconomico" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="ECONÓMICO" style="font-weight: bold;"/>
+					</f:facet>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column rowspan="2" style="width: 25%;">Tráfico promedio diario</p:column>
+								            <p:column colspan="3" style="width: 75%;"> Comercialización</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column style="width: 25%;">Proyectos de desarrollo rural contenidos en los planes de desarrollo municipales, departamentales y/o definidos por la ADR</p:column>
+								            <p:column style="width: 25%;">Conecta con al menos un punto de intercambio modal</p:column>
+								            <p:column style="width: 25%;">INDICADOR DE COMERCIALIZACIÓN</p:column>
+									    </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column rowspan="2">
+								    		<p:selectOneMenu style="width:100%" id="comboTraficoPromedio" value="#{planVialBean.via.economicoPV.ecoVolumenTraficoPNVIR}" converter="ecoVolumenTraficoPNVIRConverter">
+												<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+												<f:selectItems value="#{planVialBean.listaTrafico}" var="objeto" itemValue="#{objeto}" itemLabel="#{objeto.descripcion}" />											</p:selectOneMenu>
+				         				</p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="proyectosDesarrollo" value="#{planVialBean.via.economicoPV.proyectos}">
+							 					<p:ajax listener="#{planVialBean.onChangeEconomico()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column>
+								        	<p:selectBooleanCheckbox id="interModal" value="#{planVialBean.via.economicoPV.conectaInterModal}">
+							 					<p:ajax listener="#{planVialBean.onChangeEconomico()}"/>
+											</p:selectBooleanCheckbox>
+								        </p:column>
+								        <p:column rowspan="2"><p:inputTextarea id="indicadorComercializacionPNVIR" value="#{planVialBean.via.economicoPV.ecoComercializacionPNVIR.descripcion}" autoResize="false" styleClass="textAreaObservaciones" disabled="true"/></p:column>
+								 	</p:row>
+									<p:row>
+				         				<p:column>
+				         					<p:inputTextarea id="proyectosDesarrolloObs" value="#{planVialBean.via.economicoPV.proyectosObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Proyectos..."/>
+				         				</p:column>
+								        <p:column>
+											<p:inputTextarea id="interModalObs" value="#{planVialBean.via.economicoPV.conectaInterModalObs}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Conexiones..."/>
+								        </p:column>
+								 	</p:row>
+							  </p:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+				</p:tab>				
+				<p:tab title="Productividad">
+					<p:panel id="panelProductividad" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="PRODUCTIVIDAD" style="font-weight: bold;"/>
+					</f:facet>
+
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column  rowspan="2">Producto Principal</p:column>
+								            <p:column  rowspan="2">Rendimiento</p:column>
+								            <p:column  colspan="4">Cuartiles</p:column>
+								            <p:column  rowspan="2">Rendimiento (Tn/Ha cosechada)</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Cuartil 1</p:column>
+								            <p:column>Cuartil 2</p:column>
+								            <p:column>Cuartil 3</p:column>
+								            <p:column>Cuartil 4</p:column>
+								        </p:row>
+								    </f:facet>
+								    <p:row>
+				         				<p:column>
+								    		<p:selectOneMenu style="width: 200px;" id="comboCultivos" value="#{planVialBean.via.productividadPV.productoRendimiento}" converter="productoRendimientoConverter">
+												<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+												<f:selectItems value="#{planVialBean.listaProductos}" var="objeto" itemValue="#{objeto}" itemLabel="#{objeto.productoCuartiles.producto}" />
+												<p:ajax listener="#{planVialBean.onChangeCultivo()}"/>
+											</p:selectOneMenu>
+				         				</p:column>
+								        <p:column>
+								        	<p:inputText id="rendimiento" disabled="true" value="#{planVialBean.via.productividadPV.productoRendimiento.rendimiento}" />
+								        </p:column>
+								        <p:column>
+								        	<p:inputText id="cuartil1" disabled="true" value="#{planVialBean.via.productividadPV.productoRendimiento.productoCuartiles.cuartil1}" />
+								        </p:column>
+								        <p:column>
+								        	<p:inputText id="cuartil2" disabled="true" value="#{planVialBean.via.productividadPV.productoRendimiento.productoCuartiles.cuartil2}" />
+								        </p:column>
+								        <p:column>
+								        	<p:inputText id="cuartil3" disabled="true" value="#{planVialBean.via.productividadPV.productoRendimiento.productoCuartiles.cuartil3}" />
+								        </p:column>
+								        <p:column>
+								        	<p:inputText id="cuartil4" disabled="true" value=">#{planVialBean.via.productividadPV.productoRendimiento.productoCuartiles.cuartil3}" />
+								        </p:column>
+								        <p:column>
+								        	<p:inputTextarea id="rendimientoPNVIR" disabled="true" value="#{planVialBean.via.productividadPV.ecoRendimientoPNVIR.descripcion}" autoResize="false" />
+								        </p:column>
+								 	</p:row>
+								 	<p:row>
+								 		<p:column colspan="7">
+						    				<p:outputLabel for="@next" value="Otros productos permanentes:" style="text-align:left;"/>
+											<br/>
+											<p:inputTextarea id="otroPermanente" value="#{planVialBean.via.productividadPV.otroPermanente}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Otros..."/>
+										</p:column>
+									</p:row>
+							  </p:panelGrid>
+
+					</p:panel>
+				</p:tab>
+				<p:tab title="Intervenciones Necesarias">
+					<p:panel id="intervenciones" style="width: 100%;">
+					<f:facet name="header">
+					    <h:outputText value="INTERVENCIONES NECESARIAS" style="font-weight: bold;"/>
+					</f:facet>	
+						<div class="ui-g">
+						    <div class="ui-g-12">
+						    	<p:outputLabel for="@next" value="Descripción de la necesidad:" style="text-align:left;"/>
+								<br/>
+								<p:inputTextarea id="descNecesidad" value="#{planVialBean.via.intervencionPV.descripcion}" autoResize="false" styleClass="textAreaObservaciones" placeholder="Descripción..."/>
+						    </div>
+						    <div class="ui-g-3">
+						    	<p:outputLabel for="@next" value="Estudios y diseños:" />
+									<br/>
+									<p:inputNumber id="estudiosDisenos" symbol=" km" symbolPosition="s" value="#{planVialBean.via.intervencionPV.estudiosDisenos}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Mejoramiento:" />
+									<br/>
+									<p:inputNumber id="mejoramiento" symbol=" km" symbolPosition="s" value="#{planVialBean.via.intervencionPV.mejoramiento}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Mantenimiento:" />
+									<br/>
+									<p:inputNumber id="mantenimiento" symbol=" km" symbolPosition="s" value="#{planVialBean.via.intervencionPV.mantenimiento}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Costo total de la intervención (Mill.COP):" style="font-weight:bold" />
+									<br/>
+									<p:inputNumber id="costoIntervencion" value="#{planVialBean.via.intervencionPV.costo}"/>
+						    </div>
+						    <div class="ui-g-3">
+						    	<p:outputLabel for="@next" value="Precio por km (Mill.COP):" />
+									<br/>
+									<p:inputNumber id="estudiosDisenosPrecio" value="#{planVialBean.via.intervencionPV.estudiosDisenosPrecio}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Precio por km (Mill.COP):" />
+									<br/>
+									<p:inputNumber id="mejoramientoPrecio" value="#{planVialBean.via.intervencionPV.mejoramientoPrecio}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		<p:outputLabel for="@next" value="Precio por km (Mill.COP):" />
+									<br/>
+									<p:inputNumber id="mantenimientoPrecio" value="#{planVialBean.via.intervencionPV.mantenimientoPrecio}">
+										<p:ajax event="change" listener="#{planVialBean.onChangePrecioKm()}" />
+									</p:inputNumber>
+						    </div>
+						    <div class="ui-g-3">
+						    		
+						    </div>
+						</div>
+					</p:panel>
+				</p:tab>
+<!-- MODELO TEORICO -->
+				<p:tab title="Modelo Teórico de Gestión Vial" rendered="true">
+					<p:tabView id="ModeloTeoricoView">
+						<p:tab title="Estado general">
+							<p:panel id="panelEstadoGeneral" style="width: 100%;">
+								<f:facet name="header">
+								    <h:outputText value="Estado general de la vía" style="font-weight: bold;" />
+								</f:facet>
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<i class="pi pi-info-circle"/> <span style="font-size: 12; color: dimgrey; font-family: Segoe UI;">La situación actual de la red vial terciaria se encuentra, a nivel global y municipal, en mayores porcentajes en estados malo (C) y regular (B) y en menor porcentaje en estado bueno (A) y el objetivo de la planificación y gestión vial será mantener las que están en buen estado (A) en ese estado y llevar a él las demás de la red. &#10;La prioridad a considerar para recuperar el nivel de servicio de toda la red vial y tenerla en estado bueno(A) es:
+											<br/>1. Conservar y mantener las vías en buen estado(A).
+											<br/>2. Realizar oportunamente la conservación periódica a las vías en regular estado(B).
+											<br/>3. Ejecutar la rehabilitación de las vías en mal estado(C).
+											<br/>4. Realizar la reconstrucción de las vías en pésimo estado(D).</span>
+									</div>
+									<div class="ui-g-12">
+										<p:panelGrid style="width: 100%;">
+										    <f:facet name="header">
+										        <p:row>
+										            <p:column colspan="4">Estado general de la vía</p:column>
+										        </p:row>
+										        <p:row>
+										            <p:column id="estBuenoCol">Bueno <i class="pi pi-info-circle" title="Cuando la vía se encuentra en estado Bueno, en cuanto a las condiciones de funcionalidad se tendrá nivel de servicio bueno y nivel de acceso bueno. Este es el objetivo principal que se propone con el sistema de planificación y gestión vial, lo cual puede lograrse mediante la ejecución de actividades pertinentes y oportunas de conservación rutinaria y de conservación periódica."></i>
+											                	<p:tooltip id="toolTipContentBueno" for="estBuenoCol" position="top">
+														        	<p:graphicImage name="/imagenes/info/buen_estado.jpg" />
+														    	</p:tooltip>
+										            </p:column>
+										            <p:column id="estRegularCol">Regular <i class="pi pi-info-circle" title="Cuando la vía se encuentra en estado Regular, en cuanto a las condiciones de funcionalidad se tendrá nivel de servicio satisfactorio y nivel de acceso básico. Este es el objetivo principal que se propone con el sistema de planificación y gestión vial, lo cual puede lograrse mediante la ejecución de actividades pertinentes y oportunas de conservación rutinaria y de conservación periódica."></i>
+											                	<p:tooltip id="toolTipContentRegular" for="estRegularCol" position="top">
+														        	<p:graphicImage name="/imagenes/info/regular_estado.jpg" />
+														    	</p:tooltip>
+										            </p:column>
+										            <p:column id="estMaloCol">Malo <i class="pi pi-info-circle" title="Cuando la vía se encuentra en Mal estado se tendrá nivel de servicio y nivel de acceso deficientes y, en consecuencia, se considera que técnica y económicamente habrá concluido el ciclo de vida efectivo de la vía. En esta situación la vía requiere la ejecución de actividades de Rehabilitación que generalmente son de alto costo para la entidad vial."></i>
+											                	<p:tooltip id="toolTipContentMalo" for="estMaloCol" position="top">
+														        	<p:graphicImage name="/imagenes/info/mal_estado.jpg" />
+														    	</p:tooltip>
+										            </p:column>
+										            <p:column id="estPesimoCol">Pésimo <i class="pi pi-info-circle" title="Cuando la vía se encuentra en Pésimo estado se tendrá nivel de servicio deficiente y nivel de acceso Parcial. En esta situación la vía requiere la ejecución de actividades de Reconstrucción que generalmente son de muy alto costo para la entidad vial."></i>
+											                	<p:tooltip id="toolTipContentPesimo" for="estPesimoCol" position="top">
+														        	<p:graphicImage name="/imagenes/info/pesimo_estado.jpg" />
+														    	</p:tooltip>
+										            </p:column>
+											    </p:row>
+										    </f:facet>
+										    <p:row>
+						         				<p:column>
+						         					<p:selectBooleanCheckbox id="estBueno" value="#{planVialBean.via.modeloTeoricoPV.estGenBueno}"/>
+						         				</p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estRegular" value="#{planVialBean.via.modeloTeoricoPV.estGenRegular}"/>
+										        </p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estMalo" value="#{planVialBean.via.modeloTeoricoPV.estGenMalo}"/>
+										        </p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estPesimo" value="#{planVialBean.via.modeloTeoricoPV.estGenPesimo}"/>
+										        </p:column>
+										 	</p:row>
+											<p:row>
+						         				<p:column>
+						         					<p:inputTextarea id="estBuenoObs" value="#{planVialBean.via.modeloTeoricoPV.estGenBuenoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+						         				</p:column>
+										        <p:column>
+													<p:inputTextarea id="estRegularObs" value="#{planVialBean.via.modeloTeoricoPV.estGenRegularObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										        <p:column>
+						         					<p:inputTextarea id="estMaloObs" value="#{planVialBean.via.modeloTeoricoPV.estGenMaloObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										        <p:column>
+						         					<p:inputTextarea id="estPesimoObs" value="#{planVialBean.via.modeloTeoricoPV.estGenPesimoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										 	</p:row>
+									  </p:panelGrid>
+									</div>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Transitabilidad">
+							<p:panel id="panelTransitabilidad" style="width: 100%;">
+								<f:facet name="header">
+								    <h:outputText value="Transitabilidad de la vía" style="font-weight: bold;"/>
+								</f:facet>
+								<div class="ui-g">
+									<div class="ui-g-12">
+									<div class="ui-g-12">
+										<i class="pi pi-info-circle"/> <span style="font-size: 12; color: dimgrey; font-family: Segoe UI;">La transitabilidad se refiere a la posibilidad de llegar a los diferentes lugares que se localizan en la vía. <br/>De esta manera, podrá calificarse la vía como transitable todo el año, transitable solo algunos meses del año o como intransitable, el cual depende de la percepción personal de quien conduce.</span>
+									</div>
+										<p:panelGrid style="width: 100%;">
+										    <f:facet name="header">
+										        <p:row>
+										            <p:column colspan="3">Transitabilidad de la vía</p:column>
+										        </p:row>
+										        <p:row>
+										            <p:column id="transTodo">Transitable todo el año <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTiptransTodo" for="transTodo" position="top" value="La vía es transitable por vehículos de 4 ruedas o más durante todo el año."/>
+										            <p:column id="transAlguno">Transitable algunos meses del año <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTiptransAlguno" for="transAlguno" position="top" value="La vía es transitable por vehículos de 4 ruedas o más sólo durante ciertos periodos del año."/>
+										            <p:column id="transIn">Intransitable <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTiptransIn" for="transIn" position="top" value="No es posible el tránsito de vehículos de 4 ruedas o más."/>
+										            
+											    </p:row>
+										    </f:facet>
+										    <p:row>
+						         				<p:column>
+						         					<p:selectBooleanCheckbox id="estTransitable" value="#{planVialBean.via.modeloTeoricoPV.transTodo}"/>
+						         				</p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estTransitableMese" value="#{planVialBean.via.modeloTeoricoPV.transAlgun}"/>
+										        </p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estIntransitable" value="#{planVialBean.via.modeloTeoricoPV.transNada}"/>
+										        </p:column>
+										 	</p:row>
+											<p:row>
+						         				<p:column>
+						         					<p:inputTextarea id="estTransitableObs" value="#{planVialBean.via.modeloTeoricoPV.transTodoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+						         				</p:column>
+										        <p:column>
+													<p:inputTextarea id="estTransitableMeseObs" value="#{planVialBean.via.modeloTeoricoPV.transAlgunObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										        <p:column>
+						         					<p:inputTextarea id="estIntransitableObs" value="#{planVialBean.via.modeloTeoricoPV.transNadaObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										 	</p:row>
+									  </p:panelGrid>
+									</div>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Nivel de Servicio">
+							<p:panel id="panelNivelServicio" style="width: 100%;">
+								<f:facet name="header">
+								    <h:outputText value="Nivel de Servicio" style="font-weight: bold;"/>
+								</f:facet>
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<i class="pi pi-info-circle"/> <span style="font-size: 12; color: dimgrey; font-family: Segoe UI;">El nivel de servicio se refiere a las condiciones de comodidad, seguridad, economía, fluidez, ambiente y fiabilidad, que ofrece la vía para la movilidad y depende principalmente de las características físicas de la superficie de rodadura y del trazado geométrico de la vía. <br/>Estas condiciones están relacionadas con las velocidades de operación vehicular.</span>
+									</div>
+									<div class="ui-g-12">
+										<p:panelGrid style="width: 100%;">
+										    <f:facet name="header">
+										        <p:row>
+										            <p:column colspan="3">Nivel de Servicio </p:column>
+										        </p:row>
+										        <p:row>
+										            <p:column id="servBueno">Bueno <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTipservBueno" for="servBueno" position="top" value="Cuando es posible circular de manera cómoda y segura por la vía a la velocidad correspondiente al diseño geométrico."/>
+										            <p:column id="servSatisf">Satisfactorio <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTipservSatisf" for="servSatisf" position="top" value="Cuando se reduce la velocidad de operación hasta en un 30% con relación a la velocidad de diseño y no se afecta la seguridad en la movilización."/>
+										            <p:column id="servDef">Deficiente <i class="pi pi-info-circle"></i></p:column>
+										            <p:tooltip id="toolTipservDef" for="servDef" position="top" value="Cuando se reduce considerablemente la velocidad de operación, en más de un 30%, con relación a la del diseño geométrico e implica detenciones de ciertos sitios o cambios de carril por el deterioro de la vía o cuando la circulación se efectúa en condiciones de inseguridad vial."/>
+											    </p:row>
+										    </f:facet>
+										    <p:row>
+						         				<p:column>
+						         					<p:selectBooleanCheckbox id="estServBueno" value="#{planVialBean.via.modeloTeoricoPV.nivelSBueno}"/>
+						         				</p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estServSatisfactorio" value="#{planVialBean.via.modeloTeoricoPV.nivelSSatisf}"/>
+										        </p:column>
+										        <p:column>
+										        	<p:selectBooleanCheckbox id="estServDeficiente" value="#{planVialBean.via.modeloTeoricoPV.nivelSDefic}"/>
+										        </p:column>
+										 	</p:row>
+											<p:row>
+						         				<p:column>
+						         					<p:inputTextarea id="estServBuenoObs" value="#{planVialBean.via.modeloTeoricoPV.nivelSBuenoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+						         				</p:column>
+										        <p:column>
+													<p:inputTextarea id="estServSatisfactorioObs" value="#{planVialBean.via.modeloTeoricoPV.nivelSSatisfObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										        <p:column>
+						         					<p:inputTextarea id="estServDeficienteObs" value="#{planVialBean.via.modeloTeoricoPV.nivelSDeficObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+										        </p:column>
+										 	</p:row>
+									  </p:panelGrid>
+									</div>
+								</div>
+								<div class="ui-md-12 ui-lg-12">
+								<p:panelGrid style="width: 100%;">
+								    <f:facet name="header">
+								        <p:row>
+								            <p:column id="ins" colspan="8">Índice de Nivel de servicio (va ligado a las tablas del índice de nivel de servicio del modelo teórico) <i class="pi pi-info-circle"></i></p:column>	
+											<p:tooltip id="toolTipIns" for="ins" position="top" value="Se propone desarrollar una técnica basada en un Índice de Nivel de Servicio (INS) consistente en un valor numérico que oscile entre cero (0) y diez (10), para valorar simultáneamente la capacidad funcional y estructural de la calzada, las zonas laterales, las obras de drenaje, las estructuras viales y la señalización y elementos de seguridad vial,. En este caso valores próximos a cero (0) representan la peor condición prácticamente de intransitabilidad y diez (10) la mejor condición para la movilidad cómoda y segura."/>							            
+								        </p:row>
+								        <p:row>
+								            <p:column colspan="6">Calificaciones</p:column>
+								            <p:column colspan="2">Resultados</p:column>
+								        </p:row>
+								        <p:row>
+								            <p:column>Calzada</p:column>
+								            <p:column>Zonas laterales</p:column>
+								            <p:column>Drenaje</p:column>
+								            <p:column>Estructuras viales</p:column>
+								            <p:column>Señalización</p:column>
+								            <p:column>Superficie mayoritaria</p:column>
+								            <p:column id="formula">Fórmula 	<i class="pi pi-info-circle"/>
+											                	<p:tooltip id="toolTipformula" for="formula" position="top">
+														        	<p:graphicImage name="/imagenes/info/info_formula_ins.jpg" />
+														    	</p:tooltip>
+								            </p:column>
+								            <p:column>I.N.S.</p:column>
+								        </p:row>
+									</f:facet>
+							        <p:row>
+							            <p:column>
+								            <p:inputNumber id="califCalzada" value="#{planVialBean.via.modeloTeoricoPV.nivelSCalCalzada}">
+								            	<p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+								            </p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="califLaterales"  value="#{planVialBean.via.modeloTeoricoPV.nivelSCalLaterales}">
+								            	<p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+								            </p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="califDrenaje" value="#{planVialBean.via.modeloTeoricoPV.nivelSCalDrenaje}">
+								            	<p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+								            </p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber id="califEstructuras"  value="#{planVialBean.via.modeloTeoricoPV.nivelSCalEstructuras}">
+								            	<p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+								            </p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+								            <p:inputNumber  id="califSenalizacion" value="#{planVialBean.via.modeloTeoricoPV.nivelSCalSenalizacion}">
+								            	<p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+								            </p:inputNumber>
+							        	</p:column>
+							        	<p:column>
+										        <p:selectOneMenu id="calSuperf" value="#{planVialBean.via.modeloTeoricoPV.nivelSSuperficie}" style="width:125px">
+										        	<f:selectItem itemLabel="Pavimentada" itemValue="Pavimentada" />
+										            <f:selectItem itemLabel="Granular" itemValue="Granular" />
+										            <f:selectItem itemLabel="Tierra" itemValue="Tierra" />
+										            <p:ajax event="change" listener="#{planVialBean.onChangeINSCalificacion()}" />
+										        </p:selectOneMenu>
+							        	</p:column>
+							        	<p:column>
+								            <h:outputText id="nivelSFormula" style="width:100px;" disabled="true" value="#{planVialBean.via.modeloTeoricoPV.nivelSFormula}" />
+							        	</p:column>
+							        	<p:column>
+								            <h:outputText id="nivelSINS" disabled="true" style="font-size: 22; color: red; font-weight: bold;" value="#{planVialBean.via.modeloTeoricoPV.nivelSINS}"><f:convertNumber pattern="#0.00" /></h:outputText>
+							        	</p:column>
+							        </p:row>
+								</p:panelGrid>
+							</div>
+							<div class="ui-md-12 ui-lg-12">
+								<span style="font-size: 16; font-weight: bold;" >Intervenciones requeridas, según el I.N.S., para recuperar el nivel "Bueno (A)": </span>
+								<h:outputLink id="infoContentINS2" value="#">
+							        <h:outputText  class="pi pi-info-circle" value="" />
+							    </h:outputLink>
+			                	<p:tooltip id="toolTipContent1" for="infoContentINS2" position="top">
+						        	<p:graphicImage name="/imagenes/info/info_rango_ins.jpg" />
+						    	</p:tooltip> 
+								<h2 style="color: red;  border-bottom: 1px solid"><h:outputText id="nivelSRecomendacion" value="#{planVialBean.via.modeloTeoricoPV.nivelSRecomendacion}"/></h2>
+							</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Nivel de Acceso">
+							<p:panel id="panelNivelAcceso" style="width: 100%;">
+								<f:facet name="header">
+								    <h:outputText value="Nivel de Acceso" style="font-weight: bold;"/>
+								</f:facet>
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<i class="pi pi-info-circle"/> <span style="font-size: 12; color: dimgrey; font-family: Segoe UI;">El nivel de acceso es el encargado de articular el nivel de servicio y la transitabilidad. <br/> Se propone que el mínimo nivel de acceso requerido para la red vial terciaria colombiana sea el que corresponde al nivel básico para los vehículos prevalecientes. De esta manera, se facilitará el progreso social, el desarrollo de las actividades productivas y el acceso a los servicios básicos de salud y educación.</span>
+									</div>
+									<div class="ui-g-12">
+											<p:panelGrid style="width: 100%;">
+											    <f:facet name="header">
+											        <p:row>
+											            <p:column colspan="4">Nivel de Acceso</p:column>
+											        </p:row>
+											        <p:row>
+											            <p:column id="accBueno">Bueno <i class="pi pi-info-circle" title=""></i></p:column>
+											            <p:tooltip id="toolTipaccBueno" for="accBueno" position="top" value="Corresponde a vías que permiten la transitabilidad durante todo el año con un nivel de servicio bueno, es decir una movilidad segura permanentemente. Estos casos corresponden a vías diseñadas, construidas y mantenidas con estándares y especificaciones técnicas rigurosas."/>
+											            <p:column id="accBasico">Básico <i class="pi pi-info-circle"></i></p:column>
+											            <p:tooltip id="toolTipaccBasico" for="accBasico" position="top" value="Corresponde a vías que permiten la transitabilidad durante todo el año con interrupciones cortas, máximo de 24 horas, por emergencias causadas por fenómenos naturales como las lluvias intensas. Es el caso de los derrumbes frecuentes en las carreteras ubicadas en topografía montañosa."/>
+											            <p:column id="accDef">Deficiente <i class="pi pi-info-circle" title=""></i></p:column>
+											            <p:tooltip id="toolTipaccDef" for="accDef" position="top" value="Corresponde a transitabilidad durante todo el año con nivel de servicio deficiente, es decir en condiciones poco confiables y con posibilidad de interrupciones hasta de una semana."/>
+											            <p:column id="accParc">Parcial <i class="pi pi-info-circle"></i>
+											            <p:tooltip id="toolTipaccParc" for="accParc" position="top" value="Permite la transitabilidad en algunas épocas del año, con interrupciones para la circulación vehicular de semanas hasta de meses."/>
+											            </p:column>
+												    </p:row>
+											    </f:facet>
+											    <p:row>
+							         				<p:column>
+							         					<p:selectBooleanCheckbox id="nAccBueno" value="#{planVialBean.via.modeloTeoricoPV.nivelABueno}"/>
+							         				</p:column>
+											        <p:column>
+											        	<p:selectBooleanCheckbox id="nAccBasico" value="#{planVialBean.via.modeloTeoricoPV.nivelABasico}"/>
+											        </p:column>
+											        <p:column>
+											        	<p:selectBooleanCheckbox id="nAccDeficiente" value="#{planVialBean.via.modeloTeoricoPV.nivelADeficiente}"/>
+											        </p:column>
+											        <p:column>
+											        	<p:selectBooleanCheckbox id="nAccParcial" value="#{planVialBean.via.modeloTeoricoPV.nivelAParcial}"/>
+											        </p:column>
+											 	</p:row>
+												<p:row>
+							         				<p:column>
+							         					<p:inputTextarea id="estAccBuenoObs" value="#{planVialBean.via.modeloTeoricoPV.nivelABuenoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+							         				</p:column>
+											        <p:column>
+														<p:inputTextarea id="estAccBasicoObs" value="#{planVialBean.via.modeloTeoricoPV.nivelABasicoObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+											        </p:column>
+											        <p:column>
+							         					<p:inputTextarea id="estAccDeficienteObs" value="#{planVialBean.via.modeloTeoricoPV.nivelADeficienteObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+											        </p:column>
+											        <p:column>
+							         					<p:inputTextarea id="estAccParcialObs" value="#{planVialBean.via.modeloTeoricoPV.nivelAParcialObs}" autoResize="false" styleClass="textAreaObservacionesAlto" placeholder="Comentarios..."/>
+											        </p:column>
+											 	</p:row>
+										  </p:panelGrid>
+										</div>
+									</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Actividades">
+							<p:panel id="panelActividades" style="width: 100%;">
+								<f:facet name="header">
+								    <h:outputText value="Gestión de Actividades" style="font-weight: bold;"/>
+								</f:facet>
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<p:dataTable 
+										    id="actividadesTable" widgetVar="actividadesTable" 
+										    var="actividad" value="#{planVialBean.listaActividades}" 
+										    editable="true"
+							  			    paginator="true" rows="6" paginatorPosition="bottom">
+									 
+									        <p:ajax event="rowEdit" listener="#{planVialBean.onRowEdit}" update="growl" />
+									        <p:ajax event="rowEditCancel" listener="#{planVialBean.onRowCancel}" update="growl" />
+
+									        <p:column headerText="Fecha">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.fecha}">
+									                	<f:convertDateTime pattern="dd/MM/yyyy" />
+									                </h:outputText>
+									                </f:facet>
+									                <f:facet name="input"><p:calendar id="fecha" value="#{actividad.fecha}"  showOn="button"/>
+									                </f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									 
+									        <p:column headerText="Tipo">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.tipo}" /></f:facet>
+									                <f:facet name="input">
+									            		<p:selectOneMenu id="inTipoActividad" value="#{actividad.tipo}" style="width:100%">
+										        			<f:selectItem itemLabel="Mantenimiento Rutinario" itemValue="Mantenimiento Rutinario" />
+										            		<f:selectItem itemLabel="Mantenimiento Periódico" itemValue="Mantenimiento Periódico" />
+										            		<f:selectItem itemLabel="Rehabilitación" itemValue="Rehabilitación" />
+										            		<f:selectItem itemLabel="Reconstrucción" itemValue="Reconstrucción" />
+										        		</p:selectOneMenu>
+										        	</f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									 
+									        <p:column headerText="Actividad">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.actividad}" /></f:facet>
+									                <f:facet name="input"><p:inputText id="inActividadActividad" value="#{actividad.actividad}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+											<p:column headerText="Ubicación - desde">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.situacion}" /></f:facet>
+									                <f:facet name="input"><p:inputText id="inSituacionActividad" value="#{actividad.situacion}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+									        <p:column headerText="Ubicación - hasta">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.situacionHasta}" /></f:facet>
+									                <f:facet name="input"><p:inputText id="inSituacionHastaActividad" value="#{actividad.situacionHasta}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+									        <p:column headerText="Longitud">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.longitud}"/></f:facet>
+									                <f:facet name="input"><p:inputNumber id="inLongitudActividad" value="#{actividad.longitud}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+									        <p:column headerText="Latitud">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.latitud}"/></f:facet>
+									                <f:facet name="input"><p:inputNumber id="inLatitudActividad" value="#{actividad.latitud}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+											<p:column headerText="Costo estimado (Mill.COP)">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.costo}"><f:convertNumber pattern="###,###.00"/></h:outputText></f:facet>
+									                <f:facet name="input"><p:inputNumber id="inCostoActividad" value="#{actividad.costo}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									        
+									        <p:column headerText="Comentarios">
+									            <p:cellEditor>
+									                <f:facet name="output"><h:outputText value="#{actividad.comentario}" /></f:facet>
+									                <f:facet name="input"><p:inputText id="inComentarioActividad" value="#{actividad.comentario}" style="width:100%"/></f:facet>
+									            </p:cellEditor>
+									        </p:column>
+									 
+									        <p:column style="width:32px" exportable="false">
+									            <p:rowEditor />
+									        </p:column>
+									        <p:column style="width:32px" exportable="false">
+									         <p:commandLink id="doActionEliminarActividad" action="#{planVialBean.eliminarActividad(actividad)}">
+            										<i class="pi pi-trash" title="Eliminar actividad"></i>
+        									 </p:commandLink>
+									        </p:column>
+									    </p:dataTable>
+									     <div class="ui-g">
+									         <div class="ui-g-6">
+									             <p:commandButton value="Añadir actividad" styleClass="ui-priority-primary" process="@this" update="growl, actividadesTable"
+									                              action="#{planVialBean.onAddNew()}" style="margin-bottom:20px" oncomplete="PF('actividadesTable').paginator.setPage(PF('actividadesTable').paginator.cfg.pageCount - 1);"/>
+									         	 &#160;
+									         	 <p:commandButton value="Exportar Excel" styleClass="p-mr-2 p-mb-2" icon="pi pi-file-excel">
+							                    				<p:dataExporter type="xlsxstream" target="actividadesTable" fileName="actividades"/>
+							                 	 </p:commandButton>
+							                 </div>
+									         <div class="ui-g-6" style="text-align: right; font-weight: bold;">
+									         	Costo estimado total (Mill.COP): <h:outputText id="costoEstimadoTotal" value="#{planVialBean.via.modeloTeoricoPV.nivelSCostoTotal}" ><f:convertNumber pattern="###,###.00"/></h:outputText>
+									         </div>
+									     </div>
+									</div>
+								</div>
+							</p:panel>
+						</p:tab>
+<!-- 						<p:tab title="Recomendaciones"> -->
+<!-- 							<p:panel id="panelRecomendaciones" style="width: 100%;"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 								    <h:outputText value="Recomendaciones" style="font-weight: bold;"/> -->
+<!-- 								</f:facet> -->
+<!-- 								<div class="ui-g"> -->
+<!-- 									<div class="ui-g-12"> -->
+<!-- 										<span style="font-size: 14; font-family: Segoe UI;">Desde el momento cuando el pavimento flexible se encuentra en estado Regular (B) se inicia un proceso de deterioro acelerado de la vía porque sus daños (fisuras, grietas), de no ser reparados a tiempo, facilitan el mayor desgaste por los vehículos y el agua incrementa sus efectos negativos. Por estos motivos, esta fase se considera CRITICA y lo recomendable es que durante ella se ejecute la recuperación de la vía mediante una intervención de conservación periódica. -->
+<!-- 										<BR/>Se ha indicado que la manera de mantener las redes viales, a largo plazo, con niveles de servicio bueno y básico a menor costo es mediante la estructuración e implementación de un modelo de planificación y gestión efectivo y sostenible, cuyas intervenciones esenciales de conservación vial de carácter preventivo, son: -->
+<!-- 										<BR />• Conservación rutinaria o mantenimiento rutinario preventivo. -->
+<!-- 										<BR />• Conservación periódica o mantenimiento periódico. -->
+<!-- 										</span> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</p:panel> -->
+<!-- 						</p:tab> -->
+					</p:tabView>
+				</p:tab>
+			</p:tabView>
+			<div>
+				<p:defaultCommand target="dummy"/>
+				<p:commandButton id="dummy" process="@none" global="false" style="display:none;"/> <!-- Botón oculto que no realiza nada para que no se envíe el formulario y guarde al pulsar enter -->
+				<p:commandButton value="Guardar" id="guardarPlanVial" style="margin-bottom:30px;" actionListener="#{planVialBean.guardarPlanVial}"/>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

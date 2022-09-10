@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+		<ui:param name="hideBreadCrumb" value="true" />
+		<ui:define name="content">
+		<p:panel header="Gestión Viales GIS" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panelMapaCategorizacion">
+			<div style="width: 100%; height: 400px; position: relative;" id="map" />
+		</p:panel>
+		<h:form id="formBuscarVia">
+			<div class="p-col-12 p-md-12 p-lg-7 p-xl-7">
+				<p:steps activeIndex="1" readonly="false">
+					<p:menuitem value="Inicio" partialSubmit="false" action="bienvenida" title="Ir a inicio"/>
+					<p:menuitem value="Vías del municipio: #{migaBean.municipioNombre}"/>
+				</p:steps>
+			</div>
+			<p:outputPanel id="panelViasEncontrados">
+
+				<p:dataTable id="dataTableVias" var="via"
+					value="#{listadoViaBean.listaVias}"
+					paginator="true" rows="6" paginatorPosition="bottom"
+					emptyMessage="No se ha encontrado ninguna vía"  
+		            lazy="false"
+		            draggableColumns="true">
+					<p:column headerText="Código Vía" styleClass="centeredColumnContent" filterBy="#{via.codVia}" filterMatchMode="contains">
+						<h:outputText value="#{via.codVia}" />
+					</p:column>
+					<p:column headerText="Nombre Vía" styleClass="centeredColumnContent" filterBy="#{via.nombre}" filterMatchMode="contains" width="25%">
+						<h:outputText value="#{via.nombre}" />
+					</p:column>
+					<p:column headerText="Fecha Categorización" styleClass="centeredColumnContent">
+						<h:outputText value="#{via.categorizacion.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Puntaje 1er orden" styleClass="centeredColumnContent">
+						<h:outputText value="#{via.categorizacion.total1Orden}" />
+					</p:column>
+					<p:column headerText="Puntaje 2o orden" styleClass="centeredColumnContent">
+						<h:outputText value="#{via.categorizacion.total2Orden}" />
+					</p:column>
+					<p:column headerText="Puntaje 3er orden" styleClass="centeredColumnContent">
+						<h:outputText value="#{via.categorizacion.total3Orden}" />
+					</p:column>
+					<p:column headerText="Categoría" styleClass="centeredColumnContent">
+						<h:outputText style="font-weight: bold;" value="#{via.categorizacion.categoria.nombre}" />
+					</p:column>
+					<p:column headerText="Acciones" styleClass="centeredColumnContent" width="14%" exportable="false">
+						<p:commandButton id="doActionCategorizar"
+							action="#{migaBean.abrirCategorizarVia(via.idVia, via.codVia)}" value="Categorizar" icon="pi pi-cog"/> 
+							&#160;
+						<p:commandButton id="doActionCentrarMapa"
+							action="#{migaBean.centrarViaMapa(via.codVia)}" value="Centrar" icon="pi pi-map-marker"/>
+					</p:column>
+				</p:dataTable>
+				 <p:commandButton value="Exportar Excel" styleClass="p-mr-2 p-mb-2" icon="pi pi-file-excel">
+                    <p:dataExporter type="xlsxstream" target="dataTableVias" fileName="categorizacion"/>
+                </p:commandButton>
+			</p:outputPanel>
+		</h:form>
+	</ui:define>
+	</ui:composition>
+</html>

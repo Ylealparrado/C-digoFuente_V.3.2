@@ -1,0 +1,718 @@
+body, table, span {
+    margin: 0px;
+/*      font-size: 13px;  */
+/*      color: #0D507A;  */
+    font-family: Arial, Helvetica, sans-serif;
+/*     overflow-y: auto !important; */
+}
+
+/* REDUCIDO EL TAMAÑO DE LETRA DEL THEME - INFLUYE EN LOS ICONOS DE BOTONES */
+.ui-widget {
+	font-size: 1em !important;
+}
+
+.bodyPlantilla {
+    width: 100%;
+}
+
+
+.columnaLabelFormulario {
+    width: 200px;
+    min-width: 144px;
+/*     padding-left: 30px; */
+    font-weight: normal;
+}
+
+.columnaLabelInformacion {
+    width: 200px;
+    min-width: 200px;
+/*     padding-left: 20px; */
+    font-weight: normal;
+}
+
+.columnaLabelFormularioEstrecho {
+    width: 80px;
+    min-width: 80px;
+    padding-left: 20px;
+    font-weight: normal;
+}
+
+.columnaLabelFormularioMuyEstrecho {
+    width: 20px;
+    min-width: 20px;
+    padding-left: 30px;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+
+.columnaLabelFormularioBigger {
+    min-width: 190px;
+    padding-left: 10px;
+    font-weight: normal;
+    padding-right: 20px;
+    height:22px;
+}
+
+.columnaLabelFormularioBig {
+    min-width: 144px;
+    padding-left: 30px;
+    font-weight: normal;
+    padding-right: 20px;
+    height:22px;
+}
+
+.columnaLabelFormularioNoEditable {
+    min-width: 130px;
+    padding-left: 30px;
+    padding-right: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.columnaCampoFormulario {
+    width: 200px;
+    height:22px;
+    padding-right: 6px;
+}
+
+.columnaCampoFormularioMuyAncho {
+    width: 520px;
+    height:22px;
+    padding-right: 6px;
+}
+
+.columnaCampoInformacion {
+    width: 200px;
+    height:22px;
+    padding-right: 6px;
+}
+
+.columnaCampoCalendario {
+    width: 20px;
+    height:22px;
+}
+
+.columnaCampoFormularioAncho {
+    width: 300px;
+    padding-right: 6px;
+}
+
+.columnaCampoFormularioSinAncho {
+    width: 100%;
+    padding-right: 6px;
+}
+
+.celdaCentrada {
+    text-align: center !important;
+}
+
+.centrado .iceDatPgr {
+    margin: 5px auto;
+}
+
+/*Estilo de los t�tulos principales a situar en la parte "content" de la plantilla*/
+.tituloVentanaContenido {
+    background-color: #f5f5f5;
+    border: 0.5px solid #BBBBBB;
+    border-radius: 4px;
+    padding: 1px;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top:10px;
+}
+
+.tituloVentanaContenido table {
+    text-align: left;
+}
+
+.tituloVentanaContenido td {
+    text-align: left;
+}
+
+.tituloVentanaContenido span{
+    /*font-weight: normal;*/
+    border: none;
+    padding-left: 3px;
+    font-size: 17px;
+    color: #0D507A;
+}
+
+.tituloOpcionActiva span {
+    font-weight: bold;
+}
+
+.centrado {
+    text-align: center;
+    width: 100%;
+}
+
+.alineadoDerecha {
+    text-align: right;
+    width: 100%;
+}
+
+/*Estilo de los t�tulos secundarios a situar en la parte "content" de la plantilla*/
+.subtituloVentanaContenido {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/*Estilos para los botones*/
+input.boton
+{
+    cursor:pointer;
+    font-size:13px;
+    font-family:Verdana,sans-serif;
+    /*font-weight:bold;*/
+    color:#0D507A;
+    min-width: 100px;
+    background-color:#EEEEEE;
+    border-style:solid;
+    border-color:#BBBBBB;
+    border-width:1px;
+    margin: 0 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+img.boton
+{
+    cursor:pointer;
+}
+
+input.botonancho
+{
+    width:200px;
+}
+
+input.botonestrecho
+{
+    width:80px;
+}
+/*Fin estilos para los botones*/
+
+.anchoEstrecho {
+    min-width: 150px;
+    width: 150px;
+}
+
+.listadoElementos, .listadoElementos tbody, .listadoElementos tr, .listadoElementos th, .listadoElementos td {
+    border: none;
+    font-size: 13px;
+    padding: 0px;
+}
+
+.lineasTexto, .lineasTexto label, .lineasTexto td {
+    border: none;
+    font-size: 13px;
+    padding: 0px;
+    white-space: pre;
+}
+
+div.contenido {
+    padding: 10px 49px;
+    margin-bottom: 0px;
+    min-height: 80%;
+}
+
+div.contenido ul {
+    padding: 10px 30px;
+}
+
+.tituloSubcampo {
+    font-size: 12px;
+}
+
+.centradoVertical {
+    vertical-align:middle;
+}
+
+.arribaVertical {
+    vertical-align:top;
+}
+
+.errorValidacion {
+    border-color:red;
+}
+
+.errorValidacionTamanioGrande {
+    color:red;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.errorValidacionTexto {
+    color:red;
+}
+
+.disabledField{
+	background-color: lightgray;
+}
+
+.textoRojo {
+    color:red;
+}
+
+.textoMarronNegrita {
+    color:maroon;
+    font-weight: bold;
+}
+
+.claro .dijitTextBox, .claro .dijitInputInner {
+    color: #0d507a;
+    width: 130px;
+}
+
+.esriPrintButton span{
+    color:#0d507a;
+    text-decoration:underline;
+}
+
+.esriPrintout{
+    color:#0d507a;
+    text-decoration:underline;
+}
+
+.ui-dialog {
+    margin: 30px;
+}
+
+.cabeceraNoWrap th {
+    white-space: nowrap;
+}
+
+.anchoCompleto input, .anchoCompleto select, .anchoCompleto textarea {
+    width: 100%;
+    min-height: 18px;
+}
+
+.anchoCompleto input[type="checkbox"] {
+    width: auto;
+    min-height: 18px;
+}
+
+.negrita {
+    font-weight: bold;
+}
+
+.encimaDeTodo {
+    z-index: 10000;
+}
+
+th.ui-widget-header.ui-state-active label {
+    color: white;
+}
+
+.bodyPlantillaMapa{
+    background: none;
+}
+
+table.mgleft{
+    margin-left: 10px;
+}
+
+.btnExcel{
+    cursor: pointer;
+    font-size: 13px !important;
+    font-family: Verdana,sans-serif !important;
+    font-weight: normal !important;
+    color: #0D507A !important;
+    width: 144px;
+    height: 18px;
+    border-style: solid !important;
+    border-color: #BBBBBB;
+    border-width: 1px;
+    margin: 0 2px;
+    background: rgb(238, 238, 238);
+    border-radius: 0px;
+}
+
+.btnExcel span{
+    font-weight: normal;
+    padding-top: 1px !important;
+    font-family: Verdana,sans-serif;
+    font-size: 12px;
+}
+
+.derecha{
+    margin-top: 15px;
+}
+
+.txtAreaNotas{
+
+    width: 450px;
+    height: 150px;
+}
+
+.ancho500{
+    width: 520px;
+}
+
+.ancho350{
+    width: 350px;
+}
+
+.posicionInitial {
+    position: initial !important;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.portadaIzquierda {
+	float:left;width:500px;
+}
+
+.portadaDerecha {
+	float:left;padding:20px;
+}
+
+.botonesPortada {
+	padding: 0 !important;
+	margin-left: 10px;
+	border: 0;
+	height: 20px;
+	width: 20px;
+	cursor: pointer;
+	color: #0080c0;
+}
+
+.botonesPortada i:hover{
+	color: #85b2cb;
+}
+
+.tablaPlantillaEstandar{
+	float: right; margin-right: 50px;
+}
+
+.barraMenuPlantillaEstandar {
+	display: inline-block;
+	margin-top: -3px;
+}
+
+.ui-panel-content{
+	height:auto !important;
+}
+
+/* ESTILOS */
+.divMapa{
+    height: 300px; 
+/*     min-height: 610px;  */
+    width: 100%; 
+    background: AliceBlue;
+    margin-top: 15px;
+    resize: vertical;
+    overflow: auto;
+}
+
+/* ANCHO INPUTS*/
+.inputAncho{
+	width:80%;
+}
+
+.inputAnchoTodo{
+	width:100%;
+}
+
+/* COLUMNAS DE DATATABLES*/
+td.centeredColumnContent{
+    text-align: center !important;
+}
+
+td.rightColumnContent{
+    text-align: right;
+}
+
+
+.menuBar{
+	padding: 0px !important;
+/* 	background: #021170 !important; */
+	background: #0A3794 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	margin-bottom: -2px !important;
+    float: left;
+}
+
+.menuBar .ui-menubar,
+.menuBar .ui-menu-list,
+.menuBar .ui-menuitem,
+.menuBar .ui-menuitem-link{
+	background: #0A3794;
+	color: #fff;
+}
+
+.menuBar .ui-menuitem-text{
+    color: #fff;
+    height: 18px;
+}
+
+.menuBar .ui-menu .ui-menuitem .ui-state-hover{
+-webkit-box-shadow: 0px 0px 8px #85b2cb;
+box-shadow: 0px 0px 8px #85b2cb;
+}
+
+.menuBar .ui-menu .ui-menuitem .ui-state-hover{
+    color: white !important;
+    background: inherit;
+}
+
+.footer {
+	background-image: url('#{facesContext.externalContext.requestContextPath}/resources/imagenes/fondoInferior.png');
+	height: 31px;
+	width: 100%;
+	text-align: center;
+	line-height: 50px;
+    position:fixed;
+    left:0px;
+    bottom:0px;
+}
+
+/* OCULTAR BORDES PANELGRIDS*/
+/* .ui-widget-content{ */
+/* 	border:none; */
+/* } */
+
+.ui-widget-content .sinborde{
+	border: 0px solid #fff;
+}
+
+
+.sinborde{
+	border:none;
+	border: 0px solid #fff;
+}
+
+.anchoMitad{
+	width: 50%;
+}
+
+
+/* ACCORDIONS PERSONA */
+
+.ui-accordion .ui-accordion-header{
+    box-shadow: 1px solid #eeeeee;
+    background: #f5f5f5;
+}
+
+.ui-accordion .ui-accordion-header .ui-icon {
+    display: block;
+}
+
+
+/* ESTILOS PICKLIST VEREDAS AFECTADAS*/
+.veredasAfectadas{
+	width:100%;
+}
+
+.ui-picklist .ui-picklist-list{
+  	width: 100% !important;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+}
+
+.ui-picklist-list-wrapper{
+	max-width: 150px;
+}
+
+
+.ui-picklist-buttons-cell{
+  margin-left:40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-picklist-button-add {
+  order:2;
+}
+.ui-picklist-button-add-all {
+  order:1;
+}
+.ui-picklist-button-remove {
+  order:3;
+}
+.ui-picklist-button-remove-all {
+  order:4;
+}
+
+.columnaBotonBorrar{
+	vertical-align: middle;
+	width: 40px;
+}
+
+.columnaBotonBorrar button{
+	width: 100%;
+}
+
+
+/* SELECTONELIST */
+
+.ui-selectlistbox-filter-container .ui-icon{
+	top: 7px !important;
+	right: 7px !important;
+}
+
+.ui-selectlistbox-filter.ui-inputfield{
+	width: 100% !important;
+}
+
+.ui-widget-overlay{
+	opacity: .50 !important;
+}
+
+body .ui-state-highlight {
+    text-shadow: none !important;
+}
+ 
+
+
+/* BREADCRUMBS */
+
+/* STEPS */
+/* body .ui-steps .ui-steps-item { */
+/*     width: 20%; */
+/* } */
+
+body .ui-steps .ui-steps-item .ui-menuitem-link{
+	 padding: 0.5em;
+}
+
+body .ui-steps .ui-steps-item a.ui-menuitem-link{
+	color: black;
+}
+
+body .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link{
+    color:white;
+}
+
+body .ui-steps .ui-steps-number {
+    font-size: 200%;
+    display: none;
+    }
+
+.textAreaObservaciones{
+	width: 100%;
+	resize: none;
+}
+
+
+.textAreaObservacionesAlto{
+	width: 100%;
+	height: 150px;
+	resize: none;
+}
+
+
+/* Estilo checkboxs */
+/* .ui-chkbox .ui-chkbox-box */
+/* 	{ */
+/* 		height:35px !important; */
+/* 		width:35px !important; */
+/* 	} */
+
+.ui-chkbox .ui-state-disabled
+{
+	background: #c8c8c8 !important; 
+}
+
+
+/* Tabla puntajes */
+
+.ui-panelgrid .ui-panelgrid-cell{
+	border: 0px solid #fff;
+	text-align: center;
+}
+
+.inputPlanvial{
+	width: 80%;
+}
+
+.inputNumberPlanvial{
+	width: 20px !important;
+}
+
+.inputPlanvialBueno{
+	width: 60px;
+	background-color: lightGreen !important; 
+}
+
+.inputPlanvialRegular{
+	width: 60px;
+	background-color: lightYellow !important; 
+}
+
+.inputPlanvialMalo{
+	width: 60px;
+	background-color: LightCoral !important; 
+}
+
+body .ui-datatable thead th {
+	text-align: center !important;
+
+	}
+	
+.responsive{
+  	height: auto;
+  	width: 80%;
+  	max-height: 120px;
+}
+
+
+/* Rangos colores prioridades */
+.estrategico{
+   background-color:lightGreen !important;
+   background-image:none !important;
+}
+
+.medio{
+   background-color:Orange !important;
+   background-image:none !important;
+}
+.bajo{
+   background-color:LightCoral !important;
+   background-image:none;
+}
+
+/* Rangos colores INS */
+.bueno{
+   background-color:#0093FF !important;
+   background-image:none !important;
+   color: white;
+}
+
+.regular{
+   background-color:#0079D3 !important;
+   background-image:none !important;
+   color: white;
+}
+.malo{
+   background-color:#0063AB !important;
+   background-image:none;
+   color: white;
+}
+.pesimo{
+   background-color:#004D85 !important;
+   background-image:none;
+   color: white;
+}
+
+
+.inputNumber input
+{
+    width: 70px !important;   
+}
+
+.inputNumberIPC input
+{
+    width: 45px !important;   
+}
+
+
+.layer-switcher.shown {
+  max-height: 300px !important;
+}

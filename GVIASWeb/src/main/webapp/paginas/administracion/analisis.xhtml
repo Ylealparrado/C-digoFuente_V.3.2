@@ -1,0 +1,745 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<ui:composition template="/WEB-INF/templates/plantillaEstandar.xhtml">
+		<ui:param name="hideBreadCrumb" value="true" />
+		<ui:define name="content">
+		<h:form id="analisisCostesForm">
+<!-- 		    <p:growl id="msgs" showDetail="true"/> -->
+			<div class="p-col-12 p-md-12 p-lg-7 p-xl-7">
+				<p:steps activeIndex="3" readonly="false">
+					<p:menuitem value="Inicio" partialSubmit="false" action="#{migaBean.abrirBienvenida}" title="Ir a inicio"/>
+						<p:menuitem value="Plan vial municipio: #{migaBean.municipioNombre}" action="#{migaBean.abrirListarViasPlanVial()}"/>
+						<p:menuitem value="Estimación costes para #{migaBean.municipioNombre}" />
+				</p:steps>
+			</div>
+				<p:tabView id="analisisCostesView">
+					<p:tab title="Precio por km">
+						<p:panel id="panelPrecios" style="width: 100%;">
+							<f:facet name="header">
+							</f:facet>
+							<p:panelGrid style="width: 100%;">
+							    <f:facet name="header">
+							        <p:row>
+							        	<p:column  rowspan="2">Año</p:column>
+							            <p:column  colspan="3">Precio km Afirmado (Mill.COP)</p:column>
+							            <p:column  colspan="3">Precio km Tierra (Mill.COP)</p:column>
+							            <p:column  colspan="3">Precio km Pavimento (Mill.COP)</p:column>
+							            <p:column  rowspan="2">%IPC</p:column>
+							        </p:row>
+							        <p:row>
+							            <p:column id="bueno1">Bueno <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipbueno1" for="bueno1" value="Actividades de Mantenimiento Rutinario" position="top"/>
+							            <p:column id="regular1">Regular <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipregular1" for="regular1" value="Actividades de Mantenimiento Rutinario y Mantenimiento Periódico" position="top"/>
+							            <p:column id="malo1">Malo <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipmalo1" for="malo1" value="Actividades de Mantenimiento Rutinario y Rehabilitación" position="top"/>
+							            <p:column id="bueno2">Bueno <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipbueno2" for="bueno2" value="Actividades de Mantenimiento Rutinario" position="top"/>
+							            <p:column id="regular2">Regular <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipregular2" for="regular2" value="Actividades de Mantenimiento Rutinario y Mantenimiento Periódico" position="top"/>
+							            <p:column id="malo2">Malo <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipmalo2" for="malo2" value="Actividades de Mantenimiento Rutinario y Rehabilitación" position="top"/>
+							            <p:column id="bueno3">Bueno <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipbueno3" for="bueno3" value="Actividades de Mantenimiento Rutinario" position="top"/>
+							            <p:column id="regular3">Regular <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipregular3" for="regular3" value="Actividades de Mantenimiento Rutinario y Mantenimiento Periódico" position="top"/>
+							            <p:column id="malo3">Malo <i class="pi pi-info-circle"></i></p:column>
+							            <p:tooltip id="toolTipmalo3" for="malo3" value="Actividades de Mantenimiento Rutinario y Rehabilitación" position="top"/>
+							        </p:row>
+							    </f:facet>
+							    <p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio1" value="Primer año" />
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="afirmBueno1" value="#{analisisBean.preciosMunicipio.afirmBueno1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="afirmRegular1" value="#{analisisBean.preciosMunicipio.afirmRegular1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="afirmMalo1" value="#{analisisBean.preciosMunicipio.afirmMalo1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="tierraBueno1" value="#{analisisBean.preciosMunicipio.tierraBueno1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="tierraRegular1" value="#{analisisBean.preciosMunicipio.tierraRegular1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="tierraMalo1" value="#{analisisBean.preciosMunicipio.tierraMalo1}" styleClass="inputNumber"/>
+							        </p:column>
+							         <p:column>
+							        	<p:inputNumber id="pavimBueno1" value="#{analisisBean.preciosMunicipio.pavimBueno1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="pavimRegular1" value="#{analisisBean.preciosMunicipio.pavimRegular1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="pavinMalo1" value="#{analisisBean.preciosMunicipio.pavimMalo1}" styleClass="inputNumber"/>
+							        </p:column>
+							        <p:column>
+							        	<p:inputNumber id="ipc" value="#{analisisBean.preciosMunicipio.ipc}" styleClass="inputNumberIPC"/>
+							        </p:column>
+							 	</p:row>
+							 	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio2" value="Segundo año" />
+							        </p:column>
+							       	<p:column>
+							        	<p:outputLabel id="afirmBueno2" value="#{analisisBean.preciosMunicipio.afirmBueno2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular2" value="#{analisisBean.preciosMunicipio.afirmRegular2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo2" value="#{analisisBean.preciosMunicipio.afirmMalo2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno2" value="#{analisisBean.preciosMunicipio.tierraBueno2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular2" value="#{analisisBean.preciosMunicipio.tierraRegular2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo2" value="#{analisisBean.preciosMunicipio.tierraMalo2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno2" value="#{analisisBean.preciosMunicipio.pavimBueno2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular2" value="#{analisisBean.preciosMunicipio.pavimRegular2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo2" value="#{analisisBean.preciosMunicipio.pavimMalo2}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row>
+							    <p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio3" value="Tercer año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno3" value="#{analisisBean.preciosMunicipio.afirmBueno3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular3" value="#{analisisBean.preciosMunicipio.afirmRegular3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo3" value="#{analisisBean.preciosMunicipio.afirmMalo3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno3" value="#{analisisBean.preciosMunicipio.tierraBueno3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular3" value="#{analisisBean.preciosMunicipio.tierraRegular3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo3" value="#{analisisBean.preciosMunicipio.tierraMalo3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno3" value="#{analisisBean.preciosMunicipio.pavimBueno3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular3" value="#{analisisBean.preciosMunicipio.pavimRegular3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo3" value="#{analisisBean.preciosMunicipio.pavimMalo3}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row>
+								<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio4" value="Cuarto año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno4" value="#{analisisBean.preciosMunicipio.afirmBueno4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular4" value="#{analisisBean.preciosMunicipio.afirmRegular4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo4" value="#{analisisBean.preciosMunicipio.afirmMalo4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno4" value="#{analisisBean.preciosMunicipio.tierraBueno4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular4" value="#{analisisBean.preciosMunicipio.tierraRegular4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo4" value="#{analisisBean.preciosMunicipio.tierraMalo4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno4" value="#{analisisBean.preciosMunicipio.pavimBueno4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular4" value="#{analisisBean.preciosMunicipio.pavimRegular4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo4" value="#{analisisBean.preciosMunicipio.pavimMalo4}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row>
+							    <p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio5" value="Quinto año" />
+							        </p:column>
+									<p:column>
+							        	<p:outputLabel id="afirmBueno5" value="#{analisisBean.preciosMunicipio.afirmBueno5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular5" value="#{analisisBean.preciosMunicipio.afirmRegular5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo5" value="#{analisisBean.preciosMunicipio.afirmMalo5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno5" value="#{analisisBean.preciosMunicipio.tierraBueno5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular5" value="#{analisisBean.preciosMunicipio.tierraRegular5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo5" value="#{analisisBean.preciosMunicipio.tierraMalo5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno5" value="#{analisisBean.preciosMunicipio.pavimBueno5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular5" value="#{analisisBean.preciosMunicipio.pavimRegular5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo5" value="#{analisisBean.preciosMunicipio.pavimMalo5}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row>
+							  	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio6" value="Sexto año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno6" value="#{analisisBean.preciosMunicipio.afirmBueno6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular6" value="#{analisisBean.preciosMunicipio.afirmRegular6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo6" value="#{analisisBean.preciosMunicipio.afirmMalo6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno6" value="#{analisisBean.preciosMunicipio.tierraBueno6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular6" value="#{analisisBean.preciosMunicipio.tierraRegular6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo6" value="#{analisisBean.preciosMunicipio.tierraMalo6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno6" value="#{analisisBean.preciosMunicipio.pavimBueno6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular6" value="#{analisisBean.preciosMunicipio.pavimRegular6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo6" value="#{analisisBean.preciosMunicipio.pavimMalo6}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row>
+							   	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio7" value="Séptimo año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno7" value="#{analisisBean.preciosMunicipio.afirmBueno7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular7" value="#{analisisBean.preciosMunicipio.afirmRegular7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo7" value="#{analisisBean.preciosMunicipio.afirmMalo7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno7" value="#{analisisBean.preciosMunicipio.tierraBueno7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular7" value="#{analisisBean.preciosMunicipio.tierraRegular7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo7" value="#{analisisBean.preciosMunicipio.tierraMalo7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno7" value="#{analisisBean.preciosMunicipio.pavimBueno7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular7" value="#{analisisBean.preciosMunicipio.pavimRegular7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo7" value="#{analisisBean.preciosMunicipio.pavimMalo7}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row> 
+							   	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio8" value="Octavo año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno8" value="#{analisisBean.preciosMunicipio.afirmBueno8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular8" value="#{analisisBean.preciosMunicipio.afirmRegular8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo8" value="#{analisisBean.preciosMunicipio.afirmMalo8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno8" value="#{analisisBean.preciosMunicipio.tierraBueno8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular8" value="#{analisisBean.preciosMunicipio.tierraRegular8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo8" value="#{analisisBean.preciosMunicipio.tierraMalo8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno8" value="#{analisisBean.preciosMunicipio.pavimBueno8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular8" value="#{analisisBean.preciosMunicipio.pavimRegular8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo8" value="#{analisisBean.preciosMunicipio.pavimMalo8}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row> 
+							   	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio9" value="Noveno año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno9" value="#{analisisBean.preciosMunicipio.afirmBueno9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular9" value="#{analisisBean.preciosMunicipio.afirmRegular9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo9" value="#{analisisBean.preciosMunicipio.afirmMalo9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno9" value="#{analisisBean.preciosMunicipio.tierraBueno9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular9" value="#{analisisBean.preciosMunicipio.tierraRegular9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo9" value="#{analisisBean.preciosMunicipio.tierraMalo9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno9" value="#{analisisBean.preciosMunicipio.pavimBueno9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular9" value="#{analisisBean.preciosMunicipio.pavimRegular9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo9" value="#{analisisBean.preciosMunicipio.pavimMalo9}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row> 
+							   	<p:row>
+							    	<p:column>
+							        	<p:outputLabel id="anio10" value="Décimo año" />
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmBueno10" value="#{analisisBean.preciosMunicipio.afirmBueno10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmRegular10" value="#{analisisBean.preciosMunicipio.afirmRegular10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="afirmMalo10" value="#{analisisBean.preciosMunicipio.afirmMalo10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraBueno10" value="#{analisisBean.preciosMunicipio.tierraBueno10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraRegular10" value="#{analisisBean.preciosMunicipio.tierraRegular10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="tierraMalo10" value="#{analisisBean.preciosMunicipio.tierraMalo10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							         <p:column>
+							        	<p:outputLabel id="pavimBueno10" value="#{analisisBean.preciosMunicipio.pavimBueno10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavimRegular10" value="#{analisisBean.preciosMunicipio.pavimRegular10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							        <p:column>
+							        	<p:outputLabel id="pavinMalo10" value="#{analisisBean.preciosMunicipio.pavimMalo10}"><f:convertNumber pattern="#0.00"/></p:outputLabel>
+							        </p:column>
+							    </p:row> 
+						  </p:panelGrid>
+						  <br/>
+						  
+						  <p:fieldset style="margin-bottom:20px; text-align:center;">
+								<p:defaultCommand target="dummy"/>
+								<p:commandButton id="dummy" process="@none" global="false" style="display:none;"/> <!-- Botón oculto que no realiza nada para que no se envíe el formulario y guarde al pulsar enter -->
+								<p:commandButton value="Generar estimación" id="generarEstimacion" style="margin-bottom:30px;" actionListener="#{analisisBean.guardarAnalisis}">
+									<p:confirm header="Confirmación requerida" message="Se va a proceder a generar la estimación de costes para los próximos 10 años en base a estos precios. Se establecerá el año actual como año 1 y se reiniciarán las reprogramaciones." icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							        <p:commandButton value="Continuar" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+							    </p:confirmDialog>
+								<p:fieldset id="anioActualPrecios" style="text-align:center;">
+									<span style="font-weight: bold;"><h:outputText value="Nos encontramos en año #{analisisBean.preciosMunicipio.anioReprogramacion} que corresponde con #{analisisBean.preciosMunicipio.anioActual}" /></span>
+								</p:fieldset>
+							</p:fieldset>
+						</p:panel>
+					</p:tab>
+					<p:tab title="Estimación">
+						<p:panel id="panelEstimacionCostes" style="width: 100%;">
+							<f:facet name="header">
+							    <h:outputText value="Estimación costes en Millones COP" style="font-weight: bold;"/>
+							</f:facet>
+							
+							 	<p:dataTable var="via" value="#{analisisBean.listaVias}" id="estimacionTable"
+							 	scrollable="true" scrollWidth="94%"
+							 	paginator="true" rows="6" paginatorPosition="bottom">										 
+								        <p:columnGroup type="header">
+								            <p:row>
+								                <p:column rowspan="2" headerText="Codigo Vía" styleClass="centeredColumnContent" width="90"/>
+								                <p:column rowspan="2" headerText="Longitud(km)" styleClass="centeredColumnContent" width="90"/>
+								                <p:column id="anio1" colspan="3" headerText="Año 1" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio1" for="anio1" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a los tramos en estado regular y Rehabilitación a los tramos en estado malo para las vías clasificadas como “Estratégicas” según PNVIR (verdes)" position="top"/>
+								                <p:column id="anio2" colspan="3" headerText="Año 2" styleClass="centeredColumnContent"  width="350"/>
+								                <p:tooltip id="toolTipanio2" for="anio2" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a los tramos en estado regular y Rehabilitación a los tramos en estado malo para las vías clasificadas como “Medio” según PNVIR (naranjas)" position="top" />
+								                <p:column id="anio3" colspan="3" headerText="Año 3" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio3" for="anio3" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a los tramos en estado regular y Rehabilitación a los tramos en estado malo para las vías clasificadas como “Bajo” según PNVIR (rojas)" position="top" />
+								                <p:column id="anio4" colspan="3" headerText="Año 4" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio4" for="anio4" value="Mantenimiento Rutinario al 100% de las vías" position="top" />
+								                <p:column id="anio5" colspan="3" headerText="Año 5" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio5" for="anio5" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a las vías “Estratégicas PNVIR” (verdes)" position="top" />
+								                <p:column id="anio6" colspan="3" headerText="Año 6" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio6" for="anio6" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a las vías “Medio PNVIR” (naranjas)" position="top" />
+								                <p:column id="anio7" colspan="3" headerText="Año 7" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio7" for="anio7" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a las vías “Bajo PNVIR” (rojas)" position="top" />
+								                <p:column id="anio8" colspan="3" headerText="Año 8" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio8" for="anio8" value="Mantenimiento Rutinario al 100% de las vías" position="top" />
+								                <p:column id="anio9" colspan="3" headerText="Año 9" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio9" for="anio9" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a las vías “Estratégicas PNVIR” (verdes)" position="top" />
+								                <p:column id="anio10" colspan="3" headerText="Año 10" styleClass="centeredColumnContent" width="350"/>
+								                <p:tooltip id="toolTipanio10" for="anio10" value="Mantenimiento Rutinario al 100% de las vías. Mantenimiento Periódico a las vías “Medio PNVIR” (naranjas)" position="top" />
+								            </p:row>
+								            <p:row>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								            </p:row>
+								        </p:columnGroup>
+								 
+								        <p:column styleClass="#{via.grupoPrioridadPv eq '1' ? 'estrategico' : via.grupoPrioridadPv eq '2' ? 'medio': via.grupoPrioridadPv eq '3' ? 'bajo': null}">
+								            <h:outputText value="#{via.codVia}" styleClass="centeredColumnContent"/>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.longitudTotal}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								       <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								    	<p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rutinario10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.periodico10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.rehabilitacion10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								    </p:dataTable>
+								    <p:commandButton value="Exportar Excel" styleClass="p-mr-2 p-mb-2" icon="pi pi-file-excel">
+										<p:dataExporter type="xlsxstream" target="estimacionTable" fileName="estimacion"/>
+							        </p:commandButton>
+								    <p:fieldset id="anioActualEstimacion" style="text-align:center;">
+									<span style="font-weight: bold;"><h:outputText value="Nos encontramos en año #{analisisBean.preciosMunicipio.anioReprogramacion} que corresponde con #{analisisBean.preciosMunicipio.anioActual}" /></span>											</p:fieldset>
+						</p:panel>
+					</p:tab>
+					<p:tab title="Reprogramación">
+						<p:panel id="panelReprogramacionEstimacionCostes" style="width: 100%;">
+							<f:facet name="header">
+							    <h:outputText value="Estimación costes en Millones COP - Reprogramación" style="font-weight: bold;"/>
+							</f:facet>
+							
+							 	<p:dataTable var="via" value="#{analisisBean.listaVias}" id="reproTable"
+							 	scrollable="true" scrollWidth="94%"
+							 	paginator="true" rows="6" paginatorPosition="bottom">										 
+								        <p:columnGroup type="header">
+								            <p:row>
+								             	<p:column rowspan="2" headerText="Codigo Vía" styleClass="centeredColumnContent" width="90"/>
+								                <p:column rowspan="2" headerText="Longitud(km)" styleClass="centeredColumnContent" width="90"/>
+								                <p:column colspan="3" headerText="Año 1" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 2" styleClass="centeredColumnContent"  width="350"/>
+								                <p:column colspan="3" headerText="Año 3" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 4" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 5" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 6" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 7" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 8" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 9" styleClass="centeredColumnContent" width="350"/>
+								                <p:column colspan="3" headerText="Año 10" styleClass="centeredColumnContent" width="350"/>    
+								            </p:row>
+								            <p:row>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Rutinario" styleClass="centeredColumnContent"/>
+								                <p:column headerText="M.Periódico" styleClass="centeredColumnContent"/>
+								                <p:column headerText="Rehabilitación" styleClass="centeredColumnContent"/>
+								            </p:row>
+								        </p:columnGroup>
+								 
+								        <p:column styleClass="#{via.grupoPrioridadPv eq '1' ? 'estrategico' : via.grupoPrioridadPv eq '2' ? 'medio': via.grupoPrioridadPv eq '3' ? 'bajo': null}">
+								            <h:outputText value="#{via.codVia}" styleClass="centeredColumnContent"/>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.longitudTotal}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion1}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								       <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion2}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion3}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion4}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion5}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion6}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion7}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion8}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion9}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								    	<p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRutinario10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproPeriodico10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								        <p:column>
+								            <h:outputText value="#{via.analisisEstimacion.reproRehabilitacion10}"  styleClass="centeredColumnContent"><f:convertNumber pattern="#0.00"/></h:outputText>
+								        </p:column>
+								    </p:dataTable>
+								    <p:commandButton value="Exportar Excel" styleClass="p-mr-2 p-mb-2" icon="pi pi-file-excel">
+										<p:dataExporter type="xlsxstream" target="reproTable" fileName="reprogramacion"/>
+							        </p:commandButton>
+								    <p:fieldset style="margin-bottom:20px; text-align:center;">
+								    <p:commandButton value="Reprogramar siguiente año" id="reprogramarPlanVial" actionListener="#{analisisBean.reprogramarAnalisis}">
+										<p:confirm header="Confirmación requerida" message="Se va a proceder a reprogramar, según la inversión realizada, la estimación de costes para el próximo año." icon="pi pi-exclamation-triangle" />
+									</p:commandButton>
+									<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+									        <p:commandButton value="Continuar" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+									        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+									</p:confirmDialog>
+										<p:fieldset id="anioActualRepro" style="text-align:center;">
+											<span style="font-weight: bold;"><h:outputText value="Nos encontramos en año #{analisisBean.preciosMunicipio.anioReprogramacion} que corresponde con #{analisisBean.preciosMunicipio.anioActual}" /></span>
+										</p:fieldset>
+									</p:fieldset>
+						</p:panel>
+					</p:tab>
+				</p:tabView>
+		 </h:form>
+	</ui:define>
+	</ui:composition>
+</html>
